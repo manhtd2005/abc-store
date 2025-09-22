@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 const Header = () => {
     return (
-        <header className="w-full shadow-md">
+        <header className="w-full ">
             {/* Phần trên: logo, navbar, actions */}
             <div className="flex items-center justify-between px-6 py-4 bg-white">
                 {/* Logo */}
@@ -33,20 +33,7 @@ const Header = () => {
                         Log In
                     </button>
                     <button className="relative">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-gray-700 hover:text-blue-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m0 0h12a1 1 0 001-1v-1a1 1 0 00-1-1H6m0 2a1 1 0 11-2 0"
-                            />
-                        </svg>
+                        🛒
                         <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
                             3
                         </span>
