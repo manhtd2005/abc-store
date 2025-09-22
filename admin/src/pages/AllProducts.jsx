@@ -37,10 +37,7 @@ const AllProducts = () => {
           <tbody className="text-sm text-gray-800">
             {products.length > 0 ? (
               products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="hover:bg-gray-50 transition"
-                >
+                <tr key={product.id} className="hover:bg-gray-50 transition">
                   {/* Image */}
                   <td className="px-5 py-4 border-b">
                     <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
@@ -87,7 +84,7 @@ const AllProducts = () => {
                         className="px-3 py-1.5 text-sm bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-lg shadow transition"
                         href={`/products/${product.id}`}
                       >
-                        Xem
+                        View
                       </button>
 
                       <button
@@ -95,7 +92,7 @@ const AllProducts = () => {
                         onClick={() => removeProduct(product.id)}
                         className="px-3 py-1.5 text-sm bg-red-500 cursor-pointer hover:bg-red-600 text-white rounded-lg shadow transition"
                       >
-                        Xóa
+                        Delete
                       </button>
                     </div>
                   </td>
@@ -103,10 +100,7 @@ const AllProducts = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-center text-gray-500 py-8"
-                >
+                <td colSpan="6" className="text-center text-gray-500 py-8">
                   🚫 Không có sản phẩm nào.
                 </td>
               </tr>
