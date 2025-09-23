@@ -1,19 +1,19 @@
 import api from "./api";
 
 export const getProducts = async () => {
-    const res = await api.get("/products");
-    return res.data;
+  const res = await api.get("/products");
+  return res.data;
 };
 
 export const getProductById = async (id) => {
-    const res = await api.get(`/products/${id}`);
-    return res.data;
+  const res = await api.get(`/products/${id}`);
+  return res.data;
 };
 
-export const addProducts = async () => {
-    const res = await api.post("/products", productData);
-    return res.data;
-}
+// export const addProducts = async () => {
+//     const res = await api.post("/products", productData);
+//     return res.data;
+// }
 
 // export const addProducts = async () => {
 //     const res = await api.post("/products", productData);
@@ -33,10 +33,10 @@ export const addProducts = async () => {
 //sua, xoa sp
 
 export const alterProductById = async (id) => {
-    const res = await api.put(`/products/${id}`);
-    return res.data;
+  const res = await api.put(`/products/${id}`);
+  return res.data;
 };
 
 export const deleteProductById = async (id) => {
-    await api.delete(`/products/${id}`);
+  await api.delete(`/products/${id}`);
 };

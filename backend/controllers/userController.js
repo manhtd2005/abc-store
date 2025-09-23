@@ -1,4 +1,4 @@
-import { jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import validator from "validator";
@@ -60,7 +60,6 @@ const registerUser = async (req, res) => {
 
         // hashing user password
         const salt = await bcrypt.genSalt(10);
-        
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message });
