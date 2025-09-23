@@ -4,7 +4,7 @@ Mạnh + Phúc + Vũ
 
 Hướng dẫn cách làm việc với github:
 
--   Khi bắt đầu làm dự án, gõ lệnh này để luôn cập nhật code mới nhất: git pull origin main -rebase
+-   Khi bắt đầu làm dự án, gõ lệnh này để luôn cập nhật code mới nhất: git pull origin main --rebase
 -   Các bước push code mới lên github:
 
 *   Kiếm tra nhánh đang làm (dự án mình làm nhánh main, nếu không phải nhánh main, dùng lệnh: git switch main)
