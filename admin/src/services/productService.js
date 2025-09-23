@@ -10,27 +10,10 @@ export const getProductById = async (id) => {
   return res.data;
 };
 
-// export const addProducts = async () => {
-//     const res = await api.post("/products", productData);
-//     return res.data;
-// }
-
-// export const addProducts = async () => {
-//     const res = await api.post("/products", productData);
-//     return res.data;
-// }
-
-// export const addProducts = async () => {
-//     const res = await api.post("/products", productData);
-//     return res.data;
-// }
-
-// export const addProducts = async () => {
-//     const res = await api.post("/products", productData);
-//     return res.data;
-// }
-
-//sua, xoa sp
+export const createProducts = async (productData) => {
+  const res = await api.post("/products", productData);
+  return res.data;
+};
 
 export const alterProductById = async (id) => {
   const res = await api.put(`/products/${id}`);
