@@ -52,7 +52,7 @@ export default function AllOrders() {
             email,
             phone,
             products: orderProducts,
-            total: total.toLocaleString("vi-VN") + "đ",
+            total: total.toLocaleString("en-US") + "$",
           };
         });
 

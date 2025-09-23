@@ -32,6 +32,18 @@ const ProductProvider = ({ children }) => {
     }
   };
 
+  // ✅ Thêm sản phẩm mới (giữ ở local state, chưa gọi API fakestore)
+  const addProduct = (product) => {
+    setProducts((prev) => [
+      ...prev,
+      {
+        ...product,
+        id: Date.now(), // fake id để tránh trùng
+        rating: { count: 1 },
+      },
+    ]);
+  };
+
   // Fetch lần đầu
   useEffect(() => {
     fetchProducts();
@@ -44,6 +56,7 @@ const ProductProvider = ({ children }) => {
     setLoading,
     fetchProducts,
     removeProduct,
+    addProduct, // thêm vào context
   };
 
   return (
