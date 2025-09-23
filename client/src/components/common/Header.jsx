@@ -32,12 +32,12 @@ const Header = () => {
                     <button className="text-gray-700 hover:text-blue-500">
                         Log In
                     </button>
-                    <button className="relative">
+                    <Link to={"/cart"} className="relative">
                         🛒
                         <span className="absolute -top-1 -right-2 text-xs bg-red-500 text-white rounded-full px-1">
                             3
                         </span>
-                    </button>
+                    </Link>
                 </div>
             </div>
 
