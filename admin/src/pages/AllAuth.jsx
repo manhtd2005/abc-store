@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import AuthView from "../components/AuthView";
 import { UserContext } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 
 export default function AllAuth() {
-  const { users, deleteUser } = useContext(UserContext);
+  const { users, deleteUser, updateUser } = useContext(UserContext); // thêm updateUser
 
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -35,7 +36,7 @@ export default function AllAuth() {
                 <td className="p-3 border">{u.phone}</td>
                 <td className="p-3 border flex gap-2">
                   <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 cursor-pointer rounded"
                     onClick={() => {
                       setSelectedAccount(u);
                       setShowModal(true);
@@ -44,7 +45,7 @@ export default function AllAuth() {
                     View Information
                   </button>
                   <button
-                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 cursor-pointer rounded"
                     onClick={() => deleteUser(u.id)}
                   >
                     Delete
@@ -67,6 +68,11 @@ export default function AllAuth() {
         <AuthView
           account={selectedAccount}
           onClose={() => setShowModal(false)}
+          onSave={(updatedAccount) => {
+            updateUser(updatedAccount);
+            toast.success("Saved successfully!");
+            setShowModal(false);
+          }}
         />
       )}
     </div>

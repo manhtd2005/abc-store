@@ -120,7 +120,7 @@ const AllProducts = () => {
       </div>
 
       {/* Gọi modal */}
-      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
+      <ProductItemView product={selectedProduct} onClose={handleCloseModal} />
     </div>
   );
 };

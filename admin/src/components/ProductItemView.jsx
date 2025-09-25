@@ -1,4 +1,3 @@
-// src/components/ProductItemView.jsx
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -18,14 +17,16 @@ const ProductItemView = ({ product, onClose, onSave }) => {
   const [thumbs, setThumbs] = useState([]);
 
   useEffect(() => {
-    setEditedProduct(product);
-    const imgs = getImages(product);
-    setThumbs(imgs);
-    setMainImage(imgs[0] || "");
-    setIsEditing(false);
+    if (product) {
+      setEditedProduct(product);
+      const imgs = getImages(product);
+      setThumbs(imgs);
+      setMainImage(imgs[0] || "");
+      setIsEditing(false);
+    }
   }, [product]);
 
-  if (!product) return null;
+  if (!product || !editedProduct) return null; // ✅ tránh crash
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +34,7 @@ const ProductItemView = ({ product, onClose, onSave }) => {
     if (name === "count") {
       setEditedProduct((prev) => ({
         ...prev,
-        rating: { ...(prev.rating || {}), count: Number(value) },
+        rating: { ...(prev?.rating || {}), count: Number(value) },
       }));
       return;
     }
@@ -46,18 +47,18 @@ const ProductItemView = ({ product, onClose, onSave }) => {
     const arr = csv.split(",").map((s) => s.trim()).filter(Boolean);
     setThumbs(arr);
     setMainImage(arr[0] || "");
-    setEditedProduct((prev) => ({ ...prev, images: arr, image: arr[0] || prev.image }));
+    setEditedProduct((prev) => ({ ...prev, images: arr, image: arr[0] || prev?.image }));
   };
 
   const handleSubmit = () => {
-    const imgs = Array.isArray(editedProduct.images)
+    const imgs = Array.isArray(editedProduct?.images)
       ? editedProduct.images
       : getImages(editedProduct);
 
     const normalized = {
       ...editedProduct,
       images: imgs,
-      image: imgs[0] || editedProduct.image || "",
+      image: imgs[0] || editedProduct?.image || "",
     };
 
     if (onSave) onSave(normalized);
@@ -96,7 +97,7 @@ const ProductItemView = ({ product, onClose, onSave }) => {
           {/* Left thumbnails */}
           <div className="col-span-12 md:col-span-4 lg:col-span-3 flex gap-3">
             <div className="flex flex-col gap-3 w-20 md:w-28 overflow-y-auto max-h-[60vh] pr-1">
-              {thumbs.length > 0 ? (
+              {thumbs?.length > 0 ? (
                 thumbs.map((t, i) => (
                   <div
                     key={i}
@@ -132,7 +133,7 @@ const ProductItemView = ({ product, onClose, onSave }) => {
             {/* ID */}
             <div>
               <p className="text-sm text-gray-500">ID</p>
-              <p className="font-medium">{editedProduct.id}</p>
+              <p className="font-medium">{editedProduct?.id ?? "N/A"}</p>
             </div>
 
             {/* Title */}
@@ -141,12 +142,12 @@ const ProductItemView = ({ product, onClose, onSave }) => {
               {isEditing ? (
                 <input
                   name="title"
-                  value={editedProduct.title || ""}
+                  value={editedProduct?.title ?? ""}
                   onChange={handleChange}
                   className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-300"
                 />
               ) : (
-                <p className="font-semibold text-gray-800">{editedProduct.title}</p>
+                <p className="font-semibold text-gray-800">{editedProduct?.title ?? "N/A"}</p>
               )}
             </div>
 
@@ -157,12 +158,14 @@ const ProductItemView = ({ product, onClose, onSave }) => {
                 <input
                   name="price"
                   type="number"
-                  value={editedProduct.price || ""}
+                  value={editedProduct?.price ?? ""}
                   onChange={handleChange}
                   className="w-40 border rounded-md px-3 py-2 focus:ring-2 focus:ring-green-300"
                 />
               ) : (
-                <p className="font-semibold text-green-600">${editedProduct.price}</p>
+                <p className="font-semibold text-green-600">
+                  ${editedProduct?.price ?? "0"}
+                </p>
               )}
             </div>
 
@@ -172,13 +175,13 @@ const ProductItemView = ({ product, onClose, onSave }) => {
               {isEditing ? (
                 <textarea
                   name="description"
-                  value={editedProduct.description || ""}
+                  value={editedProduct?.description ?? ""}
                   onChange={handleChange}
                   rows="4"
                   className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-gray-300"
                 />
               ) : (
-                <p className="text-gray-700">{editedProduct.description}</p>
+                <p className="text-gray-700">{editedProduct?.description ?? "No description"}</p>
               )}
             </div>
 
@@ -188,7 +191,7 @@ const ProductItemView = ({ product, onClose, onSave }) => {
                 <p className="text-sm text-gray-500">Images (comma separated URLs)</p>
                 <input
                   type="text"
-                  value={(editedProduct.images && editedProduct.images.join(", ")) || ""}
+                  value={(editedProduct?.images && editedProduct.images.join(", ")) || ""}
                   onChange={handleImagesCSVChange}
                   className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-indigo-200"
                   placeholder="https://..., https://..., ..."
@@ -204,12 +207,12 @@ const ProductItemView = ({ product, onClose, onSave }) => {
                 {isEditing ? (
                   <input
                     name="category"
-                    value={editedProduct.category || ""}
+                    value={editedProduct?.category ?? ""}
                     onChange={handleChange}
                     className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-purple-200"
                   />
                 ) : (
-                  <p className="font-semibold">{editedProduct.category}</p>
+                  <p className="font-semibold">{editedProduct?.category ?? "N/A"}</p>
                 )}
               </div>
 
@@ -219,12 +222,12 @@ const ProductItemView = ({ product, onClose, onSave }) => {
                   <input
                     name="count"
                     type="number"
-                    value={editedProduct.rating?.count ?? 0}
+                    value={editedProduct?.rating?.count ?? 0}
                     onChange={handleChange}
                     className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-200"
                   />
                 ) : (
-                  <p className="font-semibold">{editedProduct.rating?.count ?? 0}</p>
+                  <p className="font-semibold">{editedProduct?.rating?.count ?? 0}</p>
                 )}
               </div>
             </div>
