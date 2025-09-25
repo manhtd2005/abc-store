@@ -1,4 +1,3 @@
-// File: src/components/common/ProductItem.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
@@ -22,11 +21,11 @@ const ProductItem = ({ product }) => {
         </Link>
       </div>
 
-      {/* Info - Dùng flex-1 để chiếm hết không gian còn lại */}
+      {/* Info */}
       <div className="mt-4 w-full flex flex-col items-center text-center flex-1">
-        {/* Title - Đặt chiều cao cố định để tiêu đề luôn nằm ở vị trí nhất định */}
-        <Link to={`/product/${product.id}`} className="transition duration-200 hover:text-amber-600">
-          <h3 className="text-base font-semibold text-gray-800 line-clamp-2 min-h-[2.5rem]">
+        {/* Title */}
+        <Link to={`/product/${product.id}`} className="transition-colors duration-300">
+          <h3 className="text-base font-semibold text-gray-800 line-clamp-2 min-h-[2.5rem] group-hover:text-amber-600">
             {product.title}
           </h3>
         </Link>
@@ -39,9 +38,11 @@ const ProductItem = ({ product }) => {
                 <Star
                   key={i}
                   size={16}
-                  className={`
-                    ${i < Math.round(product.rating.rate) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
-                  `}
+                  className={`${
+                    i < Math.round(product.rating.rate)
+                      ? "text-yellow-400 fill-yellow-400"
+                      : "text-gray-300"
+                  }`}
                 />
               ))}
             </div>
@@ -49,9 +50,7 @@ const ProductItem = ({ product }) => {
           <span className="text-gray-500 font-medium ml-1">
             {product.rating?.rate.toFixed(1)}
           </span>
-          <span className="text-gray-400">
-            ({product.rating?.count})
-          </span>
+          <span className="text-gray-400">({product.rating?.count})</span>
         </div>
 
         {/* Price */}
@@ -60,7 +59,7 @@ const ProductItem = ({ product }) => {
         </div>
       </div>
 
-      {/* Action Buttons - Luôn căn dưới cùng của flex-1 */}
+      {/* Action Buttons */}
       <div className="mt-4 flex gap-4 w-full justify-self-end">
         {/* View Button */}
         <Link
@@ -70,9 +69,7 @@ const ProductItem = ({ product }) => {
           View
         </Link>
         {/* Add to Cart Button */}
-        <button
-          className="flex-1 bg-gray-900 text-white py-2 rounded-full text-sm font-medium hover:bg-gray-700 transition duration-300"
-        >
+        <button className="flex-1 bg-gray-900 text-white py-2 rounded-full text-sm font-medium hover:bg-gray-700 transition duration-300">
           Add
         </button>
       </div>
