@@ -39,7 +39,6 @@ const ProductProvider = ({ children }) => {
     }
   };
 
-  // ✅ Thêm sản phẩm mới (giữ ở local state, chưa gọi API fakestore)
   const addProduct = (product) => {
     setProducts((prev) => [
       ...prev,
@@ -52,11 +51,11 @@ const ProductProvider = ({ children }) => {
     ]);
   };
 
-  const updateProduct = (updated) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === updated.id ? updated : p))
-    );
-  };
+  const updateProduct = (updatedProduct) => {
+  setProducts((prev) =>
+    prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+  );
+};
 
   // Fetch lần đầu
   useEffect(() => {

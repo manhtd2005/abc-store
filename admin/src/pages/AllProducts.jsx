@@ -3,11 +3,16 @@ import { ProductContext } from "../contexts/ProductContext";
 import ProductItemView from "../components/ProductItemView";
 
 const AllProducts = () => {
-  const { products, loading, removeProduct } = useContext(ProductContext);
+  const { products, loading, removeProduct, updateProduct } = useContext(ProductContext);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleView = (product) => {
     setSelectedProduct(product);
+  };
+
+  const handleSaveProduct = (updatedProduct) => {
+    updateProduct(updatedProduct);
+    setSelectedProduct(null);
   };
 
   const handleCloseModal = () => {
@@ -120,7 +125,13 @@ const AllProducts = () => {
       </div>
 
       {/* Gọi modal */}
-      <ProductItemView product={selectedProduct} onClose={handleCloseModal} />
+      {selectedProduct && (
+  <ProductItemView
+    product={selectedProduct}
+    onClose={handleCloseModal}
+    onSave={handleSaveProduct}
+  />
+)}
     </div>
   );
 };
