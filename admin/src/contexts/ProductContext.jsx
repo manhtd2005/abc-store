@@ -14,7 +14,14 @@ const ProductProvider = ({ children }) => {
     setLoading(true);
     try {
       const data = await getProducts();
-      setProducts(data);
+
+      // Chuẩn hoá: thêm field images[]
+      const normalized = data.map((p) => ({
+        ...p,
+        images: p.image ? [p.image] : p.images || [],
+      }));
+
+      setProducts(normalized);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -38,10 +45,17 @@ const ProductProvider = ({ children }) => {
       ...prev,
       {
         ...product,
-        id: Date.now(), // fake id để tránh trùng
+        id: Date.now(),
         rating: { count: 1 },
+        images: product.images || (product.image ? [product.image] : []), // luôn là array
       },
     ]);
+  };
+
+  const updateProduct = (updated) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === updated.id ? updated : p))
+    );
   };
 
   // Fetch lần đầu
@@ -57,6 +71,7 @@ const ProductProvider = ({ children }) => {
     fetchProducts,
     removeProduct,
     addProduct, // thêm vào context
+    updateProduct
   };
 
   return (

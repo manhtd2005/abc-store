@@ -7,9 +7,12 @@ export default function AddProducts() {
   const { addProduct } = useContext(ProductContext);
 
   const [images, setImages] = useState([null, null, null, null]);
+  const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
+  const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [count, setCount] = useState("");
 
   const handleImageChange = (index, file) => {
     if (!file) return;
@@ -26,6 +29,10 @@ export default function AddProducts() {
       toast.error("Please add at least 1 image!");
       return;
     }
+    if (!productId.trim()) {
+      toast.error("ID is required!");
+      return;
+    }
     if (!productName.trim()) {
       toast.error("Product name is required!");
       return;
@@ -38,25 +45,41 @@ export default function AddProducts() {
       toast.error("Valid price is required!");
       return;
     }
+    if (!count || Number(count) < 0) {
+      toast.error("Valid count is required!");
+      return;
+    }
+
+    // Chuẩn hoá images
+    const imageUrls = images
+      .filter((img) => img !== null)
+      .map((img) => img.preview);
 
     // Thêm sản phẩm vào context
     addProduct({
+      id: productId,
       title: productName,
+      description,
       category,
       price: Number(price),
-      image: images.find((img) => img !== null)?.preview || "", // lấy ảnh đầu tiên
+      image: imageUrls[0] || "",
+      images: imageUrls,
+      rating: { count: Number(count) },
     });
 
-    toast.success("Successfully create new product!");
+    toast.success("Successfully created new product!");
 
     // Reset form
     images.forEach((img) => {
       if (img?.preview) URL.revokeObjectURL(img.preview);
     });
     setImages([null, null, null, null]);
+    setProductId("");
     setProductName("");
+    setDescription("");
     setCategory("");
     setPrice("");
+    setCount("");
   };
 
   return (
@@ -69,6 +92,18 @@ export default function AddProducts() {
 
       {/* Form */}
       <div className="space-y-4 max-w-lg">
+        {/* ID */}
+        <div>
+          <label className="block font-medium mb-1">Product ID</label>
+          <input
+            type="text"
+            value={productId}
+            onChange={(e) => setProductId(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter product ID"
+          />
+        </div>
+
         {/* Add Images */}
         <div>
           <label className="block font-medium mb-2">Add Images</label>
@@ -111,6 +146,18 @@ export default function AddProducts() {
           />
         </div>
 
+        {/* Description */}
+        <div>
+          <label className="block font-medium mb-1">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows="3"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            placeholder="Enter description"
+          />
+        </div>
+
         {/* Categories */}
         <div>
           <label className="block font-medium mb-1">Categories</label>
@@ -131,11 +178,23 @@ export default function AddProducts() {
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter price"
             />
             <span className="ml-2 font-semibold">$</span>
           </div>
+        </div>
+
+        {/* Count */}
+        <div>
+          <label className="block font-medium mb-1">Count</label>
+          <input
+            type="number"
+            value={count}
+            onChange={(e) => setCount(e.target.value)}
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            placeholder="Enter stock count"
+          />
         </div>
 
         {/* Button */}

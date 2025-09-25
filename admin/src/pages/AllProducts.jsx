@@ -1,8 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ProductContext } from "../contexts/ProductContext";
+import ProductItemView from "../components/ProductItemView";
 
 const AllProducts = () => {
   const { products, loading, removeProduct } = useContext(ProductContext);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleView = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  };
 
   if (loading) {
     return (
@@ -82,7 +92,7 @@ const AllProducts = () => {
                     <div className="flex items-center justify-center gap-3">
                       <button
                         className="px-3 py-1.5 text-sm bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-lg shadow transition"
-                        href={`/products/${product.id}`}
+                        onClick={() => handleView(product)}
                       >
                         View
                       </button>
@@ -108,6 +118,9 @@ const AllProducts = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Gọi modal */}
+      <ProductModal product={selectedProduct} onClose={handleCloseModal} />
     </div>
   );
 };
