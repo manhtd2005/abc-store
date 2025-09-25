@@ -10,20 +10,20 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 
 const App = () => {
-    return (
-        <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800 container mx-auto px-4 py-6 max-w-7xl">
-            <Header />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/collection" element={<Collection />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/cart" element={<Cart />} />
-            </Routes>
-            <Footer />
-        </div>
-    );
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800 container mx-auto px-4 py-6 max-w-7xl">
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/collection" element={<Collection />} />
+        <Route path="/product/:productId" element={<ProductDetail />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<Cart />} />
+      </Routes>
+      <Footer />
+    </div>
+  );
 };
 
 export default App;

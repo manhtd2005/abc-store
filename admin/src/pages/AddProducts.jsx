@@ -1,214 +1,127 @@
-import { useState, useContext } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ProductContext } from "../contexts/ProductContext";
-
 export default function AddProducts() {
-  const { addProduct } = useContext(ProductContext);
-
-  const [images, setImages] = useState([null, null, null, null]);
-  const [productId, setProductId] = useState("");
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
-  const [count, setCount] = useState("");
-
-  const handleImageChange = (index, file) => {
-    if (!file) return;
-    const previewUrl = URL.createObjectURL(file);
-    const newImages = [...images];
-    newImages[index] = { file, preview: previewUrl };
-    setImages(newImages);
-  };
-
-  const handleCreate = () => {
-    // Validate
-    const hasImage = images.some((img) => img !== null);
-    if (!hasImage) {
-      toast.error("Please add at least 1 image!");
-      return;
-    }
-    if (!productId.trim()) {
-      toast.error("ID is required!");
-      return;
-    }
-    if (!productName.trim()) {
-      toast.error("Product name is required!");
-      return;
-    }
-    if (!category.trim()) {
-      toast.error("Category is required!");
-      return;
-    }
-    if (!price || Number(price) <= 0) {
-      toast.error("Valid price is required!");
-      return;
-    }
-    if (!count || Number(count) < 0) {
-      toast.error("Valid count is required!");
-      return;
-    }
-
-    // Chuẩn hoá images
-    const imageUrls = images
-      .filter((img) => img !== null)
-      .map((img) => img.preview);
-
-    // Thêm sản phẩm vào context
-    addProduct({
-      id: productId,
-      title: productName,
-      description,
-      category,
-      price: Number(price),
-      image: imageUrls[0] || "",
-      images: imageUrls,
-      rating: { count: Number(count) },
-    });
-
-    toast.success("Successfully created new product!");
-
-    // Reset form
-    images.forEach((img) => {
-      if (img?.preview) URL.revokeObjectURL(img.preview);
-    });
-    setImages([null, null, null, null]);
-    setProductId("");
-    setProductName("");
-    setDescription("");
-    setCategory("");
-    setPrice("");
-    setCount("");
-  };
-
   return (
-    <div className="p-6">
-      {/* Title */}
-      <div className="flex items-center gap-2 mb-6">
-        <span className="text-2xl">🛒</span>
-        <h1 className="text-2xl font-bold">Add Product</h1>
-      </div>
+    <div className=" bg-gray-50 flex items-center justify-center">
+      <div className="w-full max-w-3xl bg-white  p-4">
+        {/* Tiêu đề */}
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          🛒 Add Product
+        </h1>
 
-      {/* Form */}
-      <div className="space-y-4 max-w-lg">
-        {/* ID */}
-        <div>
-          <label className="block font-medium mb-1">Product ID</label>
-          <input
-            type="text"
-            value={productId}
-            onChange={(e) => setProductId(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter product ID"
-          />
-        </div>
-
-        {/* Add Images */}
-        <div>
-          <label className="block font-medium mb-2">Add Images</label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {images.map((img, idx) => (
-              <div
-                key={idx}
-                className="relative w-24 h-24 border rounded flex items-center justify-center bg-gray-50 overflow-hidden"
-              >
-                <input
-                  key={img ? img.preview : `input-${idx}`}
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageChange(idx, e.target.files[0])}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                />
-                {img ? (
-                  <img
-                    src={img.preview}
-                    alt="preview"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-xs text-gray-400">+ Add</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Product name */}
-        <div>
-          <label className="block font-medium mb-1">Product name</label>
-          <input
-            type="text"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter product name"
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block font-medium mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="3"
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-400"
-            placeholder="Enter description"
-          />
-        </div>
-
-        {/* Categories */}
-        <div>
-          <label className="block font-medium mb-1">Categories</label>
-          <input
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter category"
-          />
-        </div>
-
-        {/* Price */}
-        <div>
-          <label className="block font-medium mb-1">Price</label>
-          <div className="flex items-center">
+        {/* Form */}
+        <form className="space-y-6">
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Title
+            </label>
             <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Enter price"
+              type="text"
+              placeholder="Enter product title"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
-            <span className="ml-2 font-semibold">$</span>
           </div>
-        </div>
 
-        {/* Count */}
-        <div>
-          <label className="block font-medium mb-1">Count</label>
-          <input
-            type="number"
-            value={count}
-            onChange={(e) => setCount(e.target.value)}
-            className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Enter stock count"
-          />
-        </div>
+          {/* Price + Category */}
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Price
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                placeholder="Enter price"
+                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
 
-        {/* Button */}
-        <div>
-          <button
-            onClick={handleCreate}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-          >
-            Create Product
-          </button>
-        </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category
+              </label>
+              <select className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <option value="men's clothing">Men's Clothing</option>
+                <option value="women's clothing">Women's Clothing</option>
+                <option value="jewelery">Jewelery</option>
+                <option value="electronics">Electronics</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              rows="4"
+              placeholder="Enter product description"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            {/* Image URL */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Product Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                className="block w-full text-sm text-gray-600 
+                         file:mr-4 file:py-2 file:px-4
+                         file:rounded-lg file:border-0
+                         file:text-sm file:font-semibold
+                         file:bg-blue-50 file:text-blue-600
+                         hover:file:bg-blue-100
+                         cursor-pointer"
+              />
+            </div>
+            {/* Rating */}
+            <div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Rating (Rate)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder="Enter rate"
+                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Rating (Count)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter count"
+                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-end gap-4 pt-4">
+            <button
+              type="button"
+              className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg transition"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition"
+            >
+              Create Product
+            </button>
+          </div>
+        </form>
       </div>
-
-      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 }

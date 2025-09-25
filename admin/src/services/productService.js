@@ -10,13 +10,13 @@ export const getProductById = async (id) => {
   return res.data;
 };
 
-export const createProducts = async (productData) => {
+export const createProduct = async (productData) => {
   const res = await api.post("/products", productData);
   return res.data;
 };
 
-export const alterProductById = async (id) => {
-  const res = await api.put(`/products/${id}`);
+export const updateProductById = async (id, updateData) => {
+  const res = await api.put(`/products/${id}`, updateData);
   return res.data;
 };
 
