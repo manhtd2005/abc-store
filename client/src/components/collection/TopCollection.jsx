@@ -3,7 +3,6 @@ import React from "react";
 const TopCollection = () => {
     return (
         <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8">
-            <h3>Hello</h3>
             <div className="flex items-center gap-3">
                 <select
                     className="px-3 py-2 rounded-lg border bg-white"
