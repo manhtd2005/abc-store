@@ -14,7 +14,7 @@ const loginUser = async (req, res) => {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      return res.json({ success: false, message: "User doesn't exists" });
+      return res.json({ success: false, message: "User already exists" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -34,12 +34,12 @@ const loginUser = async (req, res) => {
 // Route for user register
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
 
     // checking user already exists or not
     const exists = await userModel.findOne({ email });
     if (exists) {
-      return res.json({ success: false, message: "User doesn't exists" });
+      return res.json({ success: false, message: "User already exists" });
     }
 
     // validating email format
@@ -54,19 +54,54 @@ const registerUser = async (req, res) => {
     if (password.length < 8) {
       return res.json({
         success: false,
-        message: "Please enter a strong password",
+        message: "Password must be at least 8 characters",
       });
     }
 
     // hashing user password
     const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new userModel({
+      email,
+      username,
+      password: hashedPassword,
+      name: { firstname: "", lastname: "" },
+      phone: "",
+      address: { city: "", street: "", number: "", zipcode: "" },
+    });
+
+    const user = await newUser.save();
+
+    const token = createToken(user._id);
+    res.json({ success: true, token });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
   }
 };
 
-// Route for admin login
-const adminLogin = async (req, res) => {};
+// Route for all users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({});
+    res.json({ success: true, users });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
 
-export { loginUser, registerUser, adminLogin };
+// Route for 1 user
+const getSingleUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+    res.json({ success: true, user });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export { loginUser, registerUser, getAllUsers, getSingleUser };
