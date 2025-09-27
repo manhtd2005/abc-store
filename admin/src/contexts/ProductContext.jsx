@@ -19,8 +19,8 @@ const ProductProvider = ({ children }) => {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getProducts();
-      setProducts(data);
+      const data = await getProducts(); // data là mảng products từ backend
+      setProducts(data || []);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -31,31 +31,36 @@ const ProductProvider = ({ children }) => {
   // Lấy 1 sản phẩm theo ID
   const fetchProductById = useCallback(async (id) => {
     try {
-      return await getProductById(id);
+      const product = await getProductById(id); // product object
+      return product;
     } catch (error) {
       console.error("Error fetching product by id:", error);
+    }
+  }, []);
+
+  // Thêm sản phẩm mới
+  const addProduct = useCallback(async (newProduct) => {
+    try {
+      const created = await createProduct(newProduct); // created = { _id, title, ... }
+      if (created && created._id) {
+        setProducts((prev) => [...prev, created]);
+      }
+    } catch (error) {
+      console.error("Error creating product:", error);
     }
   }, []);
 
   // Cập nhật sản phẩm
   const updateProduct = useCallback(async (id, productData) => {
     try {
-      const updated = await updateProductById(id, productData);
-      setProducts((prev) =>
-        prev.map((item) => (item.id === id ? updated : item))
-      );
+      const updated = await updateProductById(id, productData); // updated = product object
+      if (updated && updated._id) {
+        setProducts((prev) =>
+          prev.map((item) => (item._id === id ? updated : item))
+        );
+      }
     } catch (error) {
       console.error("Error updating product:", error);
-    }
-  }, []);
-
-  // Thêm sản phẩm
-  const addProduct = useCallback(async (newProduct) => {
-    try {
-      const created = await createProduct(newProduct);
-      setProducts((prev) => [...prev, created]);
-    } catch (error) {
-      console.error("Error creating product:", error);
     }
   }, []);
 
@@ -63,22 +68,20 @@ const ProductProvider = ({ children }) => {
   const removeProduct = useCallback(async (id) => {
     try {
       await deleteProductById(id);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setProducts((prev) => prev.filter((p) => p._id !== id));
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   }, []);
 
-  // Fetch lần đầu khi component mount
+  // Fetch sản phẩm lần đầu khi component mount
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
   const listValue = {
     products,
-    setProducts,
     loading,
-    setLoading,
     fetchProducts,
     fetchProductById,
     addProduct,

@@ -8,6 +8,8 @@ import ProductDetail from "./pages/ProductDetail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
+import Auth from "./pages/Auth";
+import Information from "./pages/Information";
 
 const App = () => {
   return (
@@ -19,7 +21,9 @@ const App = () => {
         <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart/:cartId" element={<Cart />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/information/:infoId" element={<Information />} />
       </Routes>
       <Footer />
     </div>

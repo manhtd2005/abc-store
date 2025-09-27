@@ -16,8 +16,11 @@ const AllProducts = () => {
 
   // Lưu thông tin sản phẩm
   const handleSaveProduct = (updatedProduct) => {
-    updateProduct(updatedProduct.id, updatedProduct);
-    setSelectedProduct(null);
+    if (updatedProduct?._id) {
+      updateProduct(updatedProduct._id, updatedProduct);
+      setSelectedProduct(null);
+      toast.success("Product updated successfully");
+    }
   };
 
   // Đóng modal
@@ -25,10 +28,10 @@ const AllProducts = () => {
 
   // Đồng ý xóa sản phẩm
   const handleConfirmDelete = () => {
-    if (deleteTarget) {
-      removeProduct(deleteTarget.id);
+    if (deleteTarget?._id) {
+      removeProduct(deleteTarget._id);
       setDeleteTarget(null);
-      toast.success("Success to remove product");
+      toast.success("Product removed successfully");
     }
   };
 
@@ -62,9 +65,9 @@ const AllProducts = () => {
           </thead>
 
           <tbody className="text-sm text-gray-800">
-            {products.length > 0 ? (
+            {Array.isArray(products) && products.length > 0 ? (
               products.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50 transition">
+                <tr key={product._id} className="hover:bg-gray-50 transition">
                   {/* Image */}
                   <td className="px-5 py-4 border-b">
                     <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
@@ -94,8 +97,7 @@ const AllProducts = () => {
                           : product.category === "women's clothing"
                           ? "bg-pink-100 text-pink-700"
                           : "bg-gray-100 text-gray-700"
-                      }
-                      `}
+                      }`}
                     >
                       {product.category}
                     </span>
@@ -146,7 +148,7 @@ const AllProducts = () => {
           product={selectedProduct}
           onClose={handleCloseModal}
           onSave={handleSaveProduct}
-          onDelete={removeProduct}
+          onDelete={() => removeProduct(selectedProduct._id)}
         />
       )}
 

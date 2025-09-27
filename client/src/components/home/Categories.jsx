@@ -1,27 +1,33 @@
-import React, { useContext } from "react";
 import Title from "../common/Title";
-import { CategoriesContext } from "../../contexts/CategoryContext";
 import { Link } from "react-router-dom";
+import { Tv, Gem, Shirt, ShoppingBag } from "lucide-react";
 
 const Categories = () => {
-    const { categories } = useContext(CategoriesContext);
-    return (
-        <div className="py-8 px-4">
-            <Title text1="ALL" text2="CATEGORIES" />
+  const categoryList = [
+    { name: "electronics", icon: <Tv size={32} color="brown" /> },
+    { name: "jewelery", icon: <Gem size={32} color="red" /> },
+    { name: "men's clothing", icon: <Shirt size={32} color="blue" /> },
+    { name: "women's clothing", icon: <ShoppingBag size={32} color="pink" /> },
+  ];
 
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {categories.map((item, index) => (
-                    <Link
-                        key={index}
-                        to={`/categories/${item}`}
-                        className="block px-4 py-2 text-center text-sm font-medium rounded-lg bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white shadow transition"
-                    >
-                        {item}
-                    </Link>
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div className="py-10 px-4 bg-gray-50">
+      <Title text1="ALL" text2="CATEGORIES" />
+
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+        {categoryList.map((cat, index) => (
+          <Link
+            key={index}
+            to={`/categories/${cat.name}`}
+            className="flex flex-col items-center justify-center gap-3 p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:bg-blue-50 hover:shadow-md transform hover:-translate-y-1 transition duration-300"
+          >
+            <div className="text-blue-600">{cat.icon}</div>
+            <p className="text-gray-700 font-medium capitalize">{cat.name}</p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default Categories;

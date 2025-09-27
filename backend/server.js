@@ -17,11 +17,11 @@ app.use(express.json());
 app.use(cors());
 
 // API endpoints
-app.use("/api/user", userRouter);
-app.use("/api/product", productRouter);
+app.use("/users", userRouter);
+app.use("/products", productRouter);
 
 app.get("/", (req, res) => {
-    res.send("API Working");
+  res.send("API Working");
 });
 
 app.listen(PORT, () => console.log("Server started on PORT:" + PORT));
