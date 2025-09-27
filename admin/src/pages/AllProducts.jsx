@@ -39,7 +39,7 @@ const AllProducts = () => {
     return (
       <div className="p-6 flex items-center justify-center">
         <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-        <p className="ml-3 text-gray-600">Đang tải sản phẩm...</p>
+        <p className="ml-3 text-gray-600">Loading products...</p>
       </div>
     );
   }
@@ -73,7 +73,6 @@ const AllProducts = () => {
                     <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                       <img
                         src={product.image}
-                        alt={product.title}
                         className="w-full h-full object-cover"
                       />
                     </div>
