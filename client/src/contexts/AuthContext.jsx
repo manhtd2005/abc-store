@@ -1,5 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
-import { loginApi, signinApi, getUserById } from "../services/authService";
+import {
+  loginApi,
+  signinApi,
+  getUserById,
+  updateUserApi,
+  changePasswordApi,
+} from "../services/authService";
 import { jwtDecode } from "jwt-decode";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -24,65 +30,71 @@ export const AuthProvider = ({ children }) => {
     else localStorage.removeItem("user");
   }, [user]);
 
-  // Đăng nhập (chỉ username + password)
+  // Đăng nhập
   const loginUser = async ({ username, password }) => {
     try {
       const res = await loginApi({ username, password });
       if (res && res.success) {
         setToken(res.token);
         const decoded = jwtDecode(res.token);
-        const userId = decoded._id || decoded.id;
+        const userId = decoded.id; // bạn đã sign {id} trong token
         const u = await getUserById(userId);
         setUser(u.user);
-        return {
-          success: true,
-          message: res.message || "Đăng nhập thành công",
-        };
+        return { success: true, message: "Đăng nhập thành công" };
       }
       return { success: false, message: res.message || "Đăng nhập thất bại" };
     } catch (error) {
-      console.error("Error login user:", error);
-      return { success: false, message: "Có lỗi xảy ra khi đăng nhập" };
+      console.error(error);
+      return { success: false, message: "Có lỗi khi đăng nhập" };
     }
   };
 
-  // Đăng ký (username + email + password)
+  // Đăng ký
   const signinUser = async ({ username, email, password }) => {
     try {
       const res = await signinApi({ username, email, password });
-      // giả sử API của bạn trả về { success: true, token: "...", message: "..."}
       if (res && res.success) {
-        setToken(res.token);
-        const decoded = jwtDecode(res.token);
-        const userId = decoded._id || decoded.id;
-        const u = await getUserById(userId);
-        setUser(u.user);
-        return { success: true, message: res.message || "Đăng ký thành công" };
+        return { success: true, message: "Đăng ký thành công" };
       }
-      // quan trọng: return object khi thất bại
       return { success: false, message: res.message || "Đăng ký thất bại" };
     } catch (error) {
-      console.error("Error signin user:", error);
-      return { success: false, message: "Có lỗi xảy ra khi đăng ký" };
+      console.error(error);
+      return { success: false, message: "Có lỗi khi đăng ký" };
     }
   };
 
-  // Lấy thông tin 1 user theo _id
+  // Lấy lại thông tin user theo id
   const fetchUserById = async (id) => {
     try {
       const res = await getUserById(id);
-      if (res.success) {
-        setUser(res.user);
-      } else {
-        console.error(res.message);
-      }
+      if (res.success) setUser(res.user);
       return res;
     } catch (error) {
-      console.log("Error fetch user by id:", error);
-      return {
-        success: false,
-        message: "Có lỗi xảy ra khi lấy thông tin user",
-      };
+      console.error(error);
+      return { success: false, message: "Có lỗi khi lấy user" };
+    }
+  };
+
+  // Cập nhật thông tin user
+  const updateUser = async (id, data) => {
+    try {
+      const res = await updateUserApi(id, data);
+      if (res.success) setUser(res.user);
+      return res;
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Có lỗi khi cập nhật user" };
+    }
+  };
+
+  // Đổi mật khẩu
+  const changePassword = async (id, data) => {
+    try {
+      const res = await changePasswordApi(id, data);
+      return res;
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Có lỗi khi đổi mật khẩu" };
     }
   };
 
@@ -95,7 +107,16 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, loginUser, signinUser, logout, fetchUserById }}
+      value={{
+        token,
+        user,
+        loginUser,
+        signinUser,
+        fetchUserById,
+        updateUser,
+        changePassword,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

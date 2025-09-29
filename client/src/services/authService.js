@@ -14,6 +14,18 @@ export const signinApi = async (userData) => {
 
 // Lấy thông tin 1 user theo id
 export const getUserById = async (id) => {
-  const res = await api.get(`/users/single/${id}`);
+  const res = await api.get(`/users/user/${id}`);
+  return res.data;
+};
+
+// Cập nhật thông tin user
+export const updateUserApi = async (id, data) => {
+  const res = await api.put(`/users/update/${id}`, data);
+  return res.data;
+};
+
+// Cập nhật password của user
+export const changePasswordApi = async (id, data) => {
+  const res = await api.put(`/users/change-password/${id}`, data);
   return res.data;
 };

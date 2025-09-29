@@ -12,7 +12,12 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = useCallback(async () => {
     try {
       const data = await getProducts();
-      setProducts(data);
+      setProducts(
+        data.map((p) => ({
+          ...p,
+          id: p._id || p.id,
+        }))
+      );
     } catch (error) {
       console.log("Error fetching products:", error);
     }

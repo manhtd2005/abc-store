@@ -4,7 +4,10 @@ import { Star } from "lucide-react";
 
 const ProductItem = ({ product }) => {
   return (
-    <div className="group relative  p-4 w-full border border-gray-200 rounded-2xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full">
+    <Link
+      to={`/product/$${product.id || product._id}`}
+      className="group relative  p-4 w-full border border-gray-200 rounded-2xl bg-white shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full"
+    >
       {/* Category */}
       <p className="absolute top-4 left-4 text-xs uppercase font-semibold text-gray-400 tracking-wide z-10">
         {product.category}
@@ -61,7 +64,7 @@ const ProductItem = ({ product }) => {
           ${product.price}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

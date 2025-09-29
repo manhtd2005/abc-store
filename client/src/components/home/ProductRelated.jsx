@@ -31,7 +31,7 @@ const ProductRelated = () => {
       <Title text1={"RELATED"} text2={"PRODUCT"} />
       <div className="pt-[30px] flex gap-3 items-stretch">
         {relatedProducts.map((product) => (
-          <ProductItem key={product._id} product={product} />
+          <ProductItem key={product.id} product={product} />
         ))}
       </div>
     </div>

@@ -1,13 +1,15 @@
 import React, { useContext, useState, useRef } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import ModalSuccess from "../components/common/ModalSuccess";
 
 const Auth = () => {
   const { loginUser, signinUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [errors, setErrors] = useState({}); // lưu lỗi
 
   const emailRef = useRef();
   const usernameRef = useRef();
@@ -15,26 +17,35 @@ const Auth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = emailRef.current?.value;
-    const username = usernameRef.current?.value;
-    const password = passwordRef.current.value;
+    const username = usernameRef.current?.value.trim();
+    const password = passwordRef.current?.value.trim();
+    const email = emailRef.current?.value.trim();
+
+    // kiểm tra lỗi trước
+    let newErrors = {};
+    if (!username) newErrors.username = "Vui lòng nhập username";
+    if (!password) newErrors.password = "Vui lòng nhập password";
+    if (!isLogin && !email) newErrors.email = "Vui lòng nhập email";
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
     if (isLogin) {
+      // Đăng nhập
       const res = await loginUser({ username, password });
       if (res?.success) {
-        toast.success("Đăng nhập thành công!");
         navigate("/");
       } else {
-        toast.error(res?.message);
+        // hiển thị lỗi tổng quát
+        setErrors({ form: res?.message || "Đăng nhập thất bại" });
       }
     } else {
+      // Đăng ký
       const res = await signinUser({ username, email, password });
       if (res?.success) {
-        toast.success("Đăng ký thành công!");
-        setIsLogin(true);
-        passwordRef.current.value = "";
+        setShowSuccessModal(true);
       } else {
-        toast.error(res?.message);
+        setErrors({ form: res?.message || "Đăng ký thất bại" });
       }
     }
   };
@@ -51,6 +62,7 @@ const Auth = () => {
         </p>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* ---------------------Email------------------ */}
           {!isLogin && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -60,11 +72,19 @@ const Auth = () => {
                 ref={emailRef}
                 type="email"
                 placeholder="Enter your email"
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className={`w-full border rounded-lg px-4 py-2 focus:ring-2 focus:outline-none ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-500"
+                    : "focus:ring-blue-500"
+                }`}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
             </div>
           )}
 
+          {/* ---------------------Username------------------------ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Username
@@ -73,10 +93,18 @@ const Auth = () => {
               ref={usernameRef}
               type="text"
               placeholder="Enter your username"
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className={`w-full border rounded-lg px-4 py-2 focus:ring-2 focus:outline-none ${
+                errors.username
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-blue-500"
+              }`}
             />
+            {errors.username && (
+              <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+            )}
           </div>
 
+          {/* -------------------------Password------------------------ */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -85,10 +113,23 @@ const Auth = () => {
               ref={passwordRef}
               type="password"
               placeholder="Enter your password"
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className={`w-full border rounded-lg px-4 py-2 focus:ring-2 focus:outline-none ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "focus:ring-blue-500"
+              }`}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
           </div>
 
+          {/* ----------------------Error message--------------------------- */}
+          {errors.form && (
+            <p className="text-red-500 text-center mb-2">{errors.form}</p>
+          )}
+
+          {/* -------------------------------Action------------------------------- */}
           <div className="flex items-center justify-between text-sm text-gray-500">
             <label className="flex items-center gap-2">
               <input type="checkbox" className="accent-blue-500" />
@@ -96,7 +137,10 @@ const Auth = () => {
             </label>
             <button
               type="button"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setErrors({});
+              }}
               className="hover:underline text-blue-500"
             >
               {isLogin
@@ -105,6 +149,7 @@ const Auth = () => {
             </button>
           </div>
 
+          {/* -------------------------------- Button Submit------------------------------- */}
           <button
             type="submit"
             className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition duration-300 font-semibold"
@@ -113,6 +158,19 @@ const Auth = () => {
           </button>
         </form>
       </div>
+
+      {/* -------------------------Modal Success-------------------------- */}
+      {showSuccessModal && (
+        <ModalSuccess
+          message="Đăng ký thành công! Nhấn OK để đăng nhập."
+          onClose={() => {
+            setIsLogin(true);
+            setShowSuccessModal(false);
+            navigate("/auth");
+          }}
+          url="/auth"
+        />
+      )}
     </div>
   );
 };
