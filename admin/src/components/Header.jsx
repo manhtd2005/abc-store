@@ -8,9 +8,20 @@ const Header = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
-  const notifRef = useRef(null);
+  const dropdownRef = useRef(null);
 
-  // Đếm số thông báo chưa đọc từ cookie
+  // Đóng khi click ngoài
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Đếm thông báo chưa đọc
   useEffect(() => {
     const stored = Cookies.get("notifications");
     if (stored) {
@@ -19,82 +30,45 @@ const Header = () => {
     }
   }, [isOpen]);
 
-  // Đóng khi click ra ngoài
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <header className="w-full bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Mảng 1: Tên shop */}
+          {/* Logo */}
           <div className="flex-shrink-0 text-xl font-bold text-blue-600">
             ABC Store
           </div>
 
-          {/* Mảng 2: Menu */}
+          {/* Menu */}
           <nav className="hidden md:flex space-x-8">
-            <NavLink
-              to={"/allProducts"}
-              className="text-gray-700 hover:text-blue-600 transition font-medium"
-            >
-              Products
-            </NavLink>
-            <NavLink
-              to={"/allOrders"}
-              className="text-gray-700 hover:text-blue-600 transition font-medium"
-            >
-              Orders
-            </NavLink>
-            <NavLink
-              to={"/allAuth"}
-              className="text-gray-700 hover:text-blue-600 transition font-medium"
-            >
-              Accounts
-            </NavLink>
+            <NavLink to={"/allProducts"} className="text-gray-700 hover:text-blue-600 transition font-medium">Products</NavLink>
+            <NavLink to={"/allOrders"} className="text-gray-700 hover:text-blue-600 transition font-medium">Orders</NavLink>
+            <NavLink to={"/allAuth"} className="text-gray-700 hover:text-blue-600 transition font-medium">Accounts</NavLink>
           </nav>
 
-          {/* Mảng 3: Notification */}
+          {/* Notification */}
           <div
-            ref={notifRef}
+            ref={dropdownRef}
             className="relative flex items-center space-x-2 cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <img
-              src={assets.bell}
-              alt="notification bell"
-              className="w-6 h-6"
-            />
+            <img src={assets.bell} alt="notification bell" className="w-6 h-6" />
             {unreadCount > 0 && (
-              <span className="absolute -bottom-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
+              <span className="relative -bottom-1 -left-5 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
                 {unreadCount}
               </span>
             )}
             <span className="text-gray-700 font-medium hidden sm:inline hover:opacity-80">
               Notification
             </span>
-
-            {/* Banner Notification */}
             {isOpen && (
-              <div className="absolute right-[-270px] top-[-10px] z-50">
-                <Notification
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                  unreadCount={unreadCount}
-                  setUnreadCount={setUnreadCount}
-                />
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-50">
+                <Notification setUnreadCount={setUnreadCount} />
               </div>
             )}
           </div>
 
-          {/* Mảng 4: Logout */}
+          {/* Logout */}
           <div>
             <button
               onClick={() => navigate("/")}

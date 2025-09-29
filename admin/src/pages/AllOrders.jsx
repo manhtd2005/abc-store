@@ -25,7 +25,8 @@ export default function AllOrders() {
         // Map dữ liệu
         const mappedOrders = carts.slice(0, 5).map((cart) => {
           const user = users.find((u) => u.id === cart.userId);
-          const customerName = `${user?.name?.firstname ?? ""} ${user?.name?.lastname ?? ""}`;
+          const customerName = `${user?.name?.firstname ?? ""} ${user?.name?.lastname ?? ""
+            }`;
           const email = user?.email ?? "unknown";
           const phone = user?.phone ?? "N/A";
 
@@ -40,19 +41,19 @@ export default function AllOrders() {
             };
           });
 
-          // Tính tổng
           const total = orderProducts.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
           );
 
           return {
-            id: "GH" + String(cart.id).padStart(3, "0"),
+            cartId: cart.id,
             customer: customerName,
             email,
             phone,
             products: orderProducts,
             total: total.toLocaleString("en-US") + "$",
+            paymentMethod: cart.id % 2 === 0 ? "Credit Card" : "COD",
           };
         });
 
@@ -67,37 +68,38 @@ export default function AllOrders() {
     fetchData();
   }, []);
 
-  const handleApprove = (orderId) => {
-    toast.success(`Order ${orderId} approved to deliver!`);
+  const handleApprove = (cartId) => {
+    toast.success(`Order #${cartId} approved to deliver!`);
   };
 
   if (loading) return <div className="p-6">Loading...</div>;
 
   return (
     <div className="p-6">
-      {/* Title */}
       <div className="flex items-center gap-2 mb-6">
         <span className="text-2xl">📋</span>
         <h1 className="text-2xl font-bold">Order Lists</h1>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto rounded-lg shadow-md">
         <table className="w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100 text-left">
-              <th className="p-3 text-sm font-bold uppercase border">Order ID</th>
               <th className="p-3 text-sm font-bold uppercase border">Customer</th>
-              <th className="p-3 text-sm font-bold uppercase border">Email & PhoneNumb.</th>
+              <th className="p-3 text-sm font-bold uppercase border">
+                Email & PhoneNumb.
+              </th>
               <th className="p-3 text-sm font-bold uppercase border">Products</th>
               <th className="p-3 text-sm font-bold uppercase border">Total</th>
+              <th className="p-3 text-sm font-bold uppercase border">
+                Payment Method
+              </th>
               <th className="p-3 text-sm font-bold uppercase border">Operate</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order.id} className="hover:bg-gray-50">
-                <td className="p-3 border font-semibold">{order.id}</td>
+              <tr key={order.cartId} className="hover:bg-gray-50">
                 <td className="p-3 border">{order.customer}</td>
                 <td className="p-3 border">
                   <div>{order.email}</div>
@@ -114,16 +116,20 @@ export default function AllOrders() {
                       <div>
                         <p>{p.name}</p>
                         <p className="text-sm text-gray-500">
-                          Số lượng: {p.quantity} | Đơn giá: {p.price.toLocaleString("vi-VN")}đ
+                          Số lượng: {p.quantity} | Đơn giá:{" "}
+                          {p.price.toLocaleString("vi-VN")}đ
                         </p>
                       </div>
                     </div>
                   ))}
                 </td>
-                <td className="p-3 border font-bold text-blue-600">{order.total}</td>
+                <td className="p-3 border font-bold text-blue-600">
+                  {order.total}
+                </td>
+                <td className="p-3 border">{order.paymentMethod}</td>
                 <td className="p-3 border">
                   <button
-                    onClick={() => handleApprove(order.id)}
+                    onClick={() => handleApprove(order.cartId)}
                     className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
                   >
                     Approve to Deliver

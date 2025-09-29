@@ -1,78 +1,67 @@
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { FaCheckDouble } from "react-icons/fa";
+import { getNotifications, markAsRead, deleteNotification } from "../services/notificationHelper";
 
-const Notification = ({ isOpen }) => {
+const Notification = ({ setUnreadCount }) => {
   const [notifications, setNotifications] = useState([]);
 
-
-
-  // Lưu vào cookie mỗi khi thay đổi
+  // Load khi mở dropdown
   useEffect(() => {
-    Cookies.set("notifications", JSON.stringify(notifications));
-  }, [notifications]);
-
-  // Load từ cookie khi component mount
-  useEffect(() => {
-    const stored = Cookies.get("notifications");
-    if (stored) {
-      setNotifications(JSON.parse(stored));
-    } else {
-      // ví dụ data mẫu
-      const initialData = [];
-      setNotifications(initialData);
-      Cookies.set("notifications", JSON.stringify(initialData));
-    }
+    setNotifications(getNotifications());
   }, []);
 
-  // Đánh dấu tất cả đã đọc
-  const markAllRead = () => {
-    const updated = notifications.map((n) => ({ ...n, read: true }));
+  // Tính số chưa đọc
+  useEffect(() => {
+    setUnreadCount(notifications.filter((n) => !n.read).length);
+  }, [notifications, setUnreadCount]);
+
+  const handleMarkAsRead = (id) => {
+    const updated = markAsRead(id);
     setNotifications(updated);
   };
 
-  // Helper: cắt bớt text nếu dài
-  const truncate = (str, maxLines = 2) => {
-    const words = str.split(" ");
-    if (words.length > 12) {
-      return words.slice(0, 12).join(" ") + "...";
-    }
-    return str;
+  const handleDelete = (id) => {
+    const updated = deleteNotification(id);
+    setNotifications(updated);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="absolute top-16 right-4 w-96 bg-white shadow-lg rounded-lg border">
-      {/* Header */}
-      <div className="flex justify-between items-center px-4 py-2 border-b">
-        <span className="font-semibold text-gray-700">Notification</span>
-        <button
-          onClick={markAllRead}
-          className="flex items-center text-blue-600 text-sm hover:underline"
-        >
-          <FaCheckDouble className="mr-1" /> Read all
-        </button>
-      </div>
-
-      {/* Nội dung */}
-      <div className="max-h-64 overflow-y-auto">
-        {notifications.map((n) => (
-          <div
-            key={n.id}
-            className={`flex justify-between items-center px-4 py-2 border-b ${!n.read ? "font-semibold" : "font-normal text-gray-600"
+    <div className="bg-white shadow-lg rounded-lg w-80 p-4">
+      <h3 className="text-lg font-bold mb-2">Thông báo</h3>
+      {notifications.length === 0 ? (
+        <p className="text-gray-500">Không có thông báo</p>
+      ) : (
+        <ul className="max-h-60 overflow-y-auto">
+          {notifications.map((n) => (
+            <li
+              key={n.id}
+              className={`p-2 mb-2 border rounded ${
+                n.read ? "bg-gray-100" : "bg-blue-50"
               }`}
-          >
-            <div className="flex-1">
-              <p className="truncate-2-lines">
-                {truncate(n.message)}
-                {!n.read && <span className="text-red-500 ml-1">•</span>}
-              </p>
-            </div>
-            <div className="ml-2 text-sm text-gray-500">{n.time}</div>
-          </div>
-        ))}
-      </div>
+            >
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-800">{n.message}</p>
+                <div className="flex space-x-2">
+                  {!n.read && (
+                    <button
+                      className="text-xs text-green-600"
+                      onClick={() => handleMarkAsRead(n.id)}
+                    >
+                      Đọc
+                    </button>
+                  )}
+                  <button
+                    className="text-xs text-red-600"
+                    onClick={() => handleDelete(n.id)}
+                  >
+                    Xoá
+                  </button>
+                </div>
+              </div>
+              <span className="text-xs text-gray-500">{n.time}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
