@@ -10,10 +10,13 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import Auth from "./pages/Auth";
 import Information from "./pages/Information";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800 container mx-auto px-4 py-6 max-w-7xl">
+      <ToastContainer position="top-right" autoClose={2000} />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

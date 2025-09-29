@@ -18,7 +18,7 @@ const Categories = () => {
         {categoryList.map((cat, index) => (
           <Link
             key={index}
-            to={`/categories/${cat.name}`}
+            to={"/collection"}
             className="flex flex-col items-center justify-center gap-3 p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:bg-blue-50 hover:shadow-md transform hover:-translate-y-1 transition duration-300"
           >
             <div className="text-blue-600">{cat.icon}</div>

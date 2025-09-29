@@ -1,18 +1,19 @@
 import api from "./api";
 
-// Route đăng nhập
+// Đăng nhập
 export const loginApi = async (credentials) => {
   const res = await api.post("/users/login", credentials);
   return res.data;
 };
 
-// Route đăng ký
+// Đăng ký
 export const signinApi = async (userData) => {
   const res = await api.post("/users/register", userData);
   return res.data;
 };
 
-// Lấy tất cả user
-export const getAllUsers = async () => {};
-// Lấy thông tin 1 user
-export const getUserById = async () => {};
+// Lấy thông tin 1 user theo id
+export const getUserById = async (id) => {
+  const res = await api.get(`/users/single/${id}`);
+  return res.data;
+};
