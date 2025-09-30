@@ -9,7 +9,7 @@ const ChangePassword = () => {
       </h1>
 
       <div className="flex flex-col gap-4">
-        {/* Current Password */}
+        {/* ----------------------Current Password----------------------- */}
         <div className="flex flex-col">
           <label className="font-medium text-gray-700 mb-1 flex items-center gap-2">
             <Lock size={16} /> Current Password
@@ -27,7 +27,7 @@ const ChangePassword = () => {
           </div>
         </div>
 
-        {/* New Password */}
+        {/* ----------------------New Password--------------------------- */}
         <div className="flex flex-col">
           <label className="font-medium text-gray-700 mb-1 flex items-center gap-2">
             <Lock size={16} /> New Password
@@ -45,7 +45,7 @@ const ChangePassword = () => {
           </div>
         </div>
 
-        {/* Confirm Password */}
+        {/* --------------------Confirm Password-------------------------- */}
         <div className="flex flex-col">
           <label className="font-medium text-gray-700 mb-1 flex items-center gap-2">
             <Lock size={16} /> Confirm Password
@@ -63,7 +63,7 @@ const ChangePassword = () => {
           </div>
         </div>
 
-        {/* Save Button */}
+        {/* ---------------------Save Button----------------------------- */}
         <button className="mt-4 bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-700 transition">
           <Check size={16} /> Save
         </button>
