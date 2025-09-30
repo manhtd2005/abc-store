@@ -185,7 +185,7 @@ const Information = () => {
   return (
     <div className="w-full bg-gray-50 rounded-3xl px-8">
       <div className="w-full max-w-5xl mx-auto bg-white px-10 pb-8 rounded-3xl shadow">
-        {/* Avatar + tên */}
+        {/* ------------------------ Avatar + Name--------------------------------- */}
         <div className="flex flex-col items-center mb-10">
           <div className="w-32 h-32 rounded-full bg-blue-500 flex items-center justify-center text-white text-4xl font-bold shadow-md">
             {user?.name?.firstname?.[0]?.toUpperCase() || ""}
@@ -198,6 +198,7 @@ const Information = () => {
           <p className="text-lg text-gray-500">ID: {user?._id}</p>
         </div>
 
+        {/* ------------------------- fields ------------------------------------- */}
         <div className="grid md:grid-cols-2 gap-6">
           {renderField(
             "First name",

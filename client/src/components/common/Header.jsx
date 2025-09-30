@@ -15,9 +15,9 @@ const Header = () => {
 
   // Khi bấm Yes trong modal question
   const handleYesLogout = () => {
-    logout(); // gọi hàm logout
-    setShowQuestion(false); // tắt modal question
-    setShowSuccess(true); // bật modal success
+    logout();
+    setShowQuestion(false);
+    setShowSuccess(true);
   };
 
   return (
