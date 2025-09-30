@@ -12,22 +12,26 @@ import Auth from "./pages/Auth";
 import Information from "./pages/Information";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ChangePassword from "./pages/ChangePassword";
 
 const App = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800 container mx-auto px-4 py-6 max-w-7xl">
       <ToastContainer position="top-right" autoClose={2000} />
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/collection" element={<Collection />} />
-        <Route path="/product/:productId" element={<ProductDetail />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/cart/:cartId" element={<Cart />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/information/:infoId" element={<Information />} />
-      </Routes>
+      <div className="mt-30">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/collection" element={<Collection />} />
+          <Route path="/product/:productId" element={<ProductDetail />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart/:cartId" element={<Cart />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/information/:infoId" element={<Information />} />
+          <Route path="/change-password/:infoId" element={<ChangePassword />} />
+        </Routes>
+      </div>
       <Footer />
     </div>
   );

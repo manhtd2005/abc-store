@@ -5,8 +5,6 @@ import { FaCheckDouble } from "react-icons/fa";
 const Notification = ({ isOpen }) => {
   const [notifications, setNotifications] = useState([]);
 
-
-
   // Lưu vào cookie mỗi khi thay đổi
   useEffect(() => {
     Cookies.set("notifications", JSON.stringify(notifications));
@@ -44,9 +42,11 @@ const Notification = ({ isOpen }) => {
 
   return (
     <div className="absolute top-16 right-4 w-96 bg-white shadow-lg rounded-lg border">
-      {/* Header */}
-      <div className="flex justify-between items-center px-4 py-2 border-b">
-        <span className="font-semibold text-gray-700">Notification</span>
+      {/* -------------------------------- Icon --------------------------------- */}
+      <div className="flex justify-between items-center px-4 py-2 border-b cursor-pointer">
+        <span className="font-semibold text-gray-700 cursor-default">
+          Notification
+        </span>
         <button
           onClick={markAllRead}
           className="flex items-center text-blue-600 text-sm hover:underline"
@@ -60,8 +60,9 @@ const Notification = ({ isOpen }) => {
         {notifications.map((n) => (
           <div
             key={n.id}
-            className={`flex justify-between items-center px-4 py-2 border-b ${!n.read ? "font-semibold" : "font-normal text-gray-600"
-              }`}
+            className={`flex justify-between items-center px-4 py-2 border-b ${
+              !n.read ? "font-semibold" : "font-normal text-gray-600"
+            }`}
           >
             <div className="flex-1">
               <p className="truncate-2-lines">

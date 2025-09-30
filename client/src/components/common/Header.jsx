@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full shadow-md bg-white">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-7xl shadow-md bg-white z-50">
       <div className="flex items-center justify-between px-8 py-4">
         {/* ----------------------Logo------------------------------ */}
         <Link
