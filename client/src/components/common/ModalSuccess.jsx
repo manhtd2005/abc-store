@@ -14,7 +14,7 @@ const ModalSuccess = ({ message, onClose, url }) => {
               if (url) window.location.href = url;
               else onClose();
             }}
-            className="px-5 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition"
+            className="px-5 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600 transition cursor-pointer"
           >
             OK
           </button>

@@ -33,13 +33,13 @@ const ModalQuestion = ({ question, onYes, onNo }) => {
           <div className="flex gap-4 mt-4">
             <button
               onClick={onYes}
-              className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+              className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200 cursor-pointer"
             >
               Yes
             </button>
             <button
               onClick={onNo}
-              className="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-200"
+              className="px-5 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-200 cursor-pointer"
             >
               No
             </button>

@@ -13,6 +13,7 @@ import Information from "./pages/Information";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChangePassword from "./pages/ChangePassword";
+import MainUserLayout from "./pages/MainUserLayout";
 
 const App = () => {
   return (
@@ -28,8 +29,13 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart/:cartId" element={<Cart />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/information/:infoId" element={<Information />} />
-          <Route path="/change-password/:infoId" element={<ChangePassword />} />
+          <Route element={<MainUserLayout />}>
+            <Route path="/information/:infoId" element={<Information />} />
+            <Route
+              path="/change-password/:infoId"
+              element={<ChangePassword />}
+            />
+          </Route>
         </Routes>
       </div>
       <Footer />

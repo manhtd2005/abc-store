@@ -2,7 +2,7 @@ import React, { useContext, useState, useRef } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import ModalSuccess from "../components/common/ModalSuccess";
-
+import { toast } from "react-toastify";
 const Auth = () => {
   const { loginUser, signinUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -35,6 +35,7 @@ const Auth = () => {
       const res = await loginUser({ username, password });
       if (res?.success) {
         navigate("/");
+        toast.success("Login success");
       } else {
         // hiển thị lỗi tổng quát
         setErrors({ form: res?.message || "Đăng nhập thất bại" });
@@ -130,24 +131,18 @@ const Auth = () => {
           )}
 
           {/* -------------------------------Action------------------------------- */}
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-blue-500" />
-              Remember me
-            </label>
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setErrors({});
-              }}
-              className="hover:underline text-blue-500"
-            >
-              {isLogin
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Login"}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setErrors({});
+            }}
+            className="p-1 hover:underline text-blue-500 cursor-pointer text-sm float-right"
+          >
+            {isLogin
+              ? "Don't have an account? Sign up"
+              : "Already have an account? Login"}
+          </button>
 
           {/* -------------------------------- Button Submit------------------------------- */}
           <button

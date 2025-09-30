@@ -44,14 +44,9 @@ const ProductItem = ({ product }) => {
 
       <div className="mt-4 w-full flex flex-col items-center text-center flex-1">
         {/* ------------------------------Title------------------------------ */}
-        <Link
-          to={`/product/${product.id || product._id}`}
-          className="transition-colors duration-300"
-        >
-          <h3 className="text-base font-semibold text-gray-800 line-clamp-2 min-h-[2.5rem] group-hover:text-amber-600">
-            {product.title}
-          </h3>
-        </Link>
+        <h3 className="text-base font-semibold text-gray-800 line-clamp-2 min-h-[2.5rem] group-hover:text-amber-600">
+          {product.title}
+        </h3>
 
         {/* ------------------------------Rating------------------------------ */}
         <div className="flex items-center justify-center gap-1 mt-2 text-sm">

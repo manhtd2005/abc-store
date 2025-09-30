@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useMemo } from "react";
 import Title from "../common/Title";
 import { ProductContext } from "../../contexts/ProductContext";
 import { useLocation } from "react-router-dom";
-import { getRandomElements } from "../../utils/caculator";
 import ProductItem from "../common/ProductItem";
+import { getRandomElements } from "../../utils/getRandomElements";
 
 const ProductRelated = () => {
   const { products, fetchProducts } = useContext(ProductContext);

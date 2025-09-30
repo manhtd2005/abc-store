@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
 a.active {
-    display: block;
-    color: rgb(32, 32, 141);
-    text-decoration: underline;
+  display: block;
+  color: rgb(32, 32, 141);
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
 }

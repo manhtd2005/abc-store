@@ -6,7 +6,7 @@ import { Star } from "lucide-react";
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const { fetchProductById } = useContext(ProductContext);
+  const { fetchProductById, getCategoryColor } = useContext(ProductContext);
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -24,21 +24,6 @@ const ProductDetail = () => {
   if (!product) return <div className="text-center p-6">Loading...</div>;
 
   const stars = Math.round(product.rating?.rate || 0);
-
-  const getCategoryColor = (category) => {
-    switch (category?.toLowerCase()) {
-      case "men's clothing":
-        return "bg-blue-100 text-blue-800";
-      case "women's clothing":
-        return "bg-pink-100 text-pink-800";
-      case "jewelery":
-        return "bg-yellow-100 text-yellow-800";
-      case "electronics":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
   return (
     <div className="max-w-5xl mx-auto  p-8">
