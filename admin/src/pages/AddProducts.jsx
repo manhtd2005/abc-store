@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { ProductContext } from "../contexts/ProductContext";
 import { toast } from "react-toastify";
+import { addNotification } from "../services/notificationHelper";
 
 export default function AddProducts() {
   const { addProduct } = useContext(ProductContext);
@@ -58,6 +59,7 @@ export default function AddProducts() {
       setImagePreview(null);
 
       toast.success("Product created successfully!");
+      addNotification(`Sản phẩm "${title}" đã được tạo thành công.`);
     } catch (error) {
       toast.error("Error creating product.");
       console.error(error);

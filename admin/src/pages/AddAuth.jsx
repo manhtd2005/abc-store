@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../contexts/UserContext";
+import { addNotification } from "../services/notificationHelper";
 
 export default function AddAuth() {
   const { users, addUser } = useContext(UserContext);
@@ -61,6 +62,7 @@ export default function AddAuth() {
 
     addUser(newAccount);
     toast.success("Successfully created new account!");
+    addNotification(`Tài khoản "${username}" đã được tạo thành công.`);
 
     // Reset form
     setEmail("");

@@ -3,6 +3,7 @@ import { ProductContext } from "../contexts/ProductContext";
 import ProductItemView from "../components/ProductItemView";
 import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
+import { addNotification } from "../services/notificationHelper";
 
 const AllProducts = () => {
   const { products, loading, removeProduct, updateProduct } =
@@ -20,6 +21,8 @@ const AllProducts = () => {
       updateProduct(updatedProduct._id, updatedProduct);
       setSelectedProduct(null);
       toast.success("Product updated successfully");
+      updateProduct(updatedProduct);
+      addNotification(`Sản phẩm "${updatedProduct.title}" đã được cập nhật.`);
     }
   };
 
@@ -32,6 +35,7 @@ const AllProducts = () => {
       removeProduct(deleteTarget._id);
       setDeleteTarget(null);
       toast.success("Product removed successfully");
+      addNotification(`Sản phẩm "${deleteTarget.title}" đã bị xoá.`);
     }
   };
 
@@ -86,17 +90,16 @@ const AllProducts = () => {
                   {/* Category */}
                   <td className="px-5 py-4 border-b">
                     <span
-                      className={`px-3 py-1 rounded-full whitespace-nowrap text-xs font-semibold ${
-                        product.category === "men's clothing"
+                      className={`px-3 py-1 rounded-full whitespace-nowrap text-xs font-semibold ${product.category === "men's clothing"
                           ? "bg-green-100 text-green-700"
                           : product.category === "jewelery"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : product.category === "electronics"
-                          ? "bg-purple-100 text-purple-700"
-                          : product.category === "women's clothing"
-                          ? "bg-pink-100 text-pink-700"
-                          : "bg-gray-100 text-gray-700"
-                      }`}
+                            ? "bg-yellow-100 text-yellow-700"
+                            : product.category === "electronics"
+                              ? "bg-purple-100 text-purple-700"
+                              : product.category === "women's clothing"
+                                ? "bg-pink-100 text-pink-700"
+                                : "bg-gray-100 text-gray-700"
+                        }`}
                     >
                       {product.category}
                     </span>

@@ -1,13 +1,34 @@
 import { useContext, useState } from "react";
 import AuthView from "../components/AuthView";
 import { UserContext } from "../contexts/UserContext";
+import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
+import { addNotification } from "../services/notificationHelper";
 
 export default function AllAuth() {
-  const { users, deleteUser, updateUser } = useContext(UserContext); // thêm updateUser
+  const { users, deleteUser, updateUser } = useContext(UserContext);
 
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null); // lưu user muốn xoá
+
+  // Xử lý lưu user (update)
+  const handleSave = (updatedAccount) => {
+    updateUser(updatedAccount);
+    toast.success("User updated successfully!");
+    addNotification(`Người dùng "${updatedAccount.name.firstname} ${updatedAccount.name.lastname}" đã được cập nhật.`);
+    setShowModal(false);
+  };
+
+  // Xử lý xoá user (sau khi confirm trong modal)
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      deleteUser(deleteTarget.id);
+      toast.success("User deleted successfully!");
+      addNotification(`Người dùng "${deleteTarget.name.firstname} ${deleteTarget.name.lastname}" đã bị xoá.`);
+      setDeleteTarget(null);
+    }
+  };
 
   return (
     <div className="p-6">
@@ -46,7 +67,7 @@ export default function AllAuth() {
                   </button>
                   <button
                     className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 cursor-pointer rounded"
-                    onClick={() => deleteUser(u.id)}
+                    onClick={() => setDeleteTarget(u)}
                   >
                     Delete
                   </button>
@@ -64,15 +85,21 @@ export default function AllAuth() {
         </table>
       </div>
 
+      {/* Modal Update User */}
       {showModal && selectedAccount && (
         <AuthView
           account={selectedAccount}
           onClose={() => setShowModal(false)}
-          onSave={(updatedAccount) => {
-            updateUser(updatedAccount);
-            toast.success("Saved successfully!");
-            setShowModal(false);
-          }}
+          onSave={handleSave}
+        />
+      )}
+
+      {/* Modal Delete */}
+      {deleteTarget && (
+        <DeleteModel
+          message={`Are you sure you want to delete this user?`}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setDeleteTarget(null)}
         />
       )}
     </div>
