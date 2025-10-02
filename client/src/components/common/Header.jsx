@@ -129,7 +129,7 @@ const Header = () => {
           message="You have logged out successfully!"
           onClose={() => {
             setShowSuccess(false);
-            navigate("/");
+            navigate("/auth");
           }}
         />
       )}
