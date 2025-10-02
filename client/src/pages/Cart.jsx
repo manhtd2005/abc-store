@@ -1,80 +1,132 @@
-import React from "react";
-import { ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useMemo } from "react";
+import { Plus, Minus, X } from "lucide-react";
+import { CartContext } from "../contexts/CartContext";
+import { ProductContext } from "../contexts/ProductContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Cart = () => {
-  // Phần này sẽ là nơi xử lý dữ liệu giỏ hàng thực tế sau này
-  // const cartItems = useSelector(state => state.cart.items);
-  // const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const cartItems = []; // Tạm thời để mảng rỗng để hiển thị giao diện khi không có sản phẩm
+  const { cart, updateCart, removeFromCart, recalcTotal, total } =
+    useContext(CartContext);
+  const { products, getCategoryColor } = useContext(ProductContext);
+  const navigate = useNavigate();
+
+  // Ghép thông tin sản phẩm vào cartItem
+  const cartItems = useMemo(
+    () =>
+      cart.map((item) => ({
+        productId: item.productId?._id,
+        title: item.productId?.title || "Unknown",
+        quantity: item?.quantity || 1,
+        category: item.productId?.category || "Unknown",
+        price: item.productId?.price || 0,
+        image: item.productId?.image || "/placeholder.png",
+      })),
+    [cart]
+  );
+
+  // Cập nhật tổng tiền khi cartItems thay đổi
+  useEffect(() => {
+    recalcTotal(cartItems);
+  }, [cartItems, recalcTotal]);
+
+  if (products.length === 0) return <p>Loading products...</p>;
 
   return (
-    <div className="container mx-auto my-10 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
-        <ShoppingCart size={32} /> Your Shopping Cart
-      </h1>
+    <div className="mx-auto p-6 ">
+      <h1 className="text-3xl font-bold mb-6">🛒 Your Cart</h1>
 
-      {cartItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-10 bg-white rounded-lg shadow-lg text-center">
-          <ShoppingCart size={64} className="text-gray-400 mb-4" />
-          <p className="text-gray-500 text-lg mb-4 font-semibold">
-            Your cart is empty.
-          </p>
-          <p className="text-gray-600 mb-6">
-            Looks like you haven't added anything to your cart yet. Go ahead &
-            explore some categories!
-          </p>
-          <Link
-            to="/collection"
-            className="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition duration-300 transform hover:scale-105"
+      <div className="grid gap-4 border rounded-lg p-4 bg-white shadow">
+        <div className="grid grid-cols-[0.5fr_2.5fr_1fr_1fr_0.5fr] gap-5 text-gray-700 font-medium border-b pb-2">
+          <div>Product</div>
+          <div>Name</div>
+          <div>Price</div>
+          <div>Quantity</div>
+          <div></div>
+        </div>
+
+        {cartItems.map((item, idx) => (
+          <div
+            key={`${item.productId}-${idx}`}
+            className="grid grid-cols-[0.5fr_2.5fr_1fr_1fr_0.5fr] gap-5 items-center border-b py-3 hover:bg-gray-50 transition"
           >
-            Start Shopping
-          </Link>
-        </div>
-      ) : (
-        <div className="lg:flex lg:gap-8">
-          {/* Cart Items List */}
-          <div className="lg:w-2/3 space-y-6">
-            {/* Đây là nơi render danh sách sản phẩm.
-                            Khi có sản phẩm, bạn sẽ dùng .map() để hiển thị.
-                            Ví dụ:
-                            {cartItems.map(item => (
-                                <CartItem key={item.id} item={item} />
-                            ))}
-                        */}
-          </div>
-
-          {/* Order Summary */}
-          <div className="lg:w-1/3 bg-white rounded-2xl shadow p-6 lg:mt-0 mt-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Order Summary
-            </h2>
-            <div className="space-y-3 text-gray-700">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="font-semibold">$0.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span className="font-semibold">$0.00</span>
-              </div>
-              <div className="border-t pt-4 mt-4 flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span>$0.00</span>
-              </div>
+            {/* Image */}
+            <div>
+              <img
+                src={item.image}
+                alt={item.title}
+                className="w-30 h-30 object-contain rounded-lg"
+              />
             </div>
-            <button className="w-full bg-gray-400 text-white py-3 rounded-lg mt-6 cursor-not-allowed">
-              Proceed to Checkout
-            </button>
-            <Link
-              to="/collection"
-              className="block text-center text-gray-600 mt-4 hover:text-gray-900 transition"
+
+            {/* Name + Category */}
+            <div className="flex flex-col gap-1 overflow-hidden">
+              <span className="font-medium text-gray-800 truncate">
+                {item.title}
+              </span>
+              <span
+                className={`text-sm px-2 py-1 rounded-full w-max ${getCategoryColor(
+                  item.category
+                )}`}
+              >
+                {item.category}
+              </span>
+            </div>
+
+            {/* Price */}
+            <div className="font-semibold text-blue-600">{item.price} VND</div>
+
+            {/* Quantity */}
+            <div className="flex items-center gap-2">
+              <button
+                className="p-1 border rounded transition bg-red-500"
+                onClick={() =>
+                  updateCart(item.productId, Math.max(1, item.quantity - 1))
+                }
+              >
+                <Minus size={16} />
+              </button>
+              <span className="px-3 py-1 border rounded">{item.quantity}</span>
+              <button
+                className="p-1 border rounded transition bg-green-500"
+                onClick={() => updateCart(item.productId, item.quantity + 1)}
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+
+            {/* Remove */}
+            <div>
+              <button
+                className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition flex items-center gap-1"
+                onClick={() => removeFromCart(item.productId)}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {/* Total + Checkout */}
+        <div className="flex justify-end mt-4">
+          <div className="text-right">
+            <p className="text-lg font-medium">Total: {total} VND</p>
+            <button
+              onClick={() => {
+                if (total <= 0) {
+                  toast.error("Not product to checkout");
+                  return;
+                } else {
+                  navigate("/order");
+                }
+              }}
+              className="mt-3 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
             >
-              Continue Shopping
-            </Link>
+              Checkout
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

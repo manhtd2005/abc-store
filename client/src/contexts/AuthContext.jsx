@@ -40,6 +40,8 @@ export const AuthProvider = ({ children }) => {
         const userId = decoded.id; // bạn đã sign {id} trong token
         const u = await getUserById(userId);
         setUser(u.user);
+        console.log(u.user);
+
         return { success: true, message: "Đăng nhập thành công" };
       }
       return { success: false, message: res.message || "Đăng nhập thất bại" };
@@ -63,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Lấy lại thông tin user theo id
+  // Lấy thông tin user theo id
   const fetchUserById = async (id) => {
     try {
       const res = await getUserById(id);

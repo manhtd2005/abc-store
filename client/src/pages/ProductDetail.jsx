@@ -1,13 +1,26 @@
-// src/pages/ProductDetail.jsx
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ProductContext } from "../contexts/ProductContext";
-import { Star } from "lucide-react";
+import { Star, Minus, Plus } from "lucide-react";
+import { CartContext } from "../contexts/CartContext";
+import { AuthContext } from "../contexts/AuthContext";
+import { toast } from "react-toastify";
+import ModalQuestion from "../components/common/ModalQuestion";
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
+
   const { fetchProductById, getCategoryColor } = useContext(ProductContext);
+  const { addToCart } = useContext(CartContext);
+  const { user, token } = useContext(AuthContext);
+
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   useEffect(() => {
     const getData = async () => {
@@ -25,14 +38,30 @@ const ProductDetail = () => {
 
   const stars = Math.round(product.rating?.rate || 0);
 
+  const handleAddToCart = async () => {
+    if (!token || !user) {
+      setShowModal(true);
+      return;
+    }
+
+    try {
+      await addToCart(product._id, quantity);
+
+      toast.success("Success to add product");
+    } catch (error) {
+      console.error("Error add to cart:", error);
+      toast.error("Error to add product");
+    }
+  };
+
   return (
-    <div className="max-w-5xl mx-auto  p-8">
+    <div className="max-w-5xl mx-auto p-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-        {/* ----------------------------- Image------------------------ */}
         <div className="flex justify-center items-center">
           {product.image ? (
             <img
               src={product.image}
+              alt={product.title}
               className="max-h-[500px] object-contain transform transition-transform duration-300 hover:scale-105"
             />
           ) : (
@@ -41,12 +70,10 @@ const ProductDetail = () => {
         </div>
 
         <div>
-          {/* -------------------------Title-------------------------------- */}
           <h1 className="text-3xl font-bold text-gray-800 mb-4 transition-colors duration-300 hover:text-blue-600 cursor-default">
             {product.title}
           </h1>
 
-          {/* ------------------------------Rating------------------------------------ */}
           <div className="flex items-center mb-3 cursor-default">
             {Array.from({ length: 5 }, (_, index) => (
               <Star
@@ -64,12 +91,10 @@ const ProductDetail = () => {
             </span>
           </div>
 
-          {/* --------------------------------Description--------------------------------- */}
           <p className="text-gray-600 mb-4 leading-relaxed cursor-default">
             {product.description}
           </p>
 
-          {/* -------------------------------Category------------------------------- */}
           <div className="mb-4">
             <span
               className={`inline-block px-3 py-1 rounded-full text-sm font-medium shadow-sm ${getCategoryColor(
@@ -80,17 +105,47 @@ const ProductDetail = () => {
             </span>
           </div>
 
-          {/* -------------------------------- Price ------------------------------------ */}
-          <p className="text-2xl font-semibold text-green-600 mb-4 transition-colors duration-300 hover:text-green-700 cursor-default">
+          <p className="text-4xl font-semibold text-green-600 mb-4 transition-colors duration-300 hover:text-green-700 cursor-default">
             ${product.price}
           </p>
 
-          {/* --------------------------------- Button add to cart ----------------------------- */}
-          <button className="px-8 py-3 mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer">
+          <div className="flex items-center mb-4">
+            <button
+              onClick={handleDecrease}
+              className="px-3 py-2 bg-red-200 rounded-l hover:bg-red-300 active:scale-95"
+            >
+              <Minus size={18} />
+            </button>
+            <div className="px-4 py-2 bg-gray-100 text-center select-none">
+              {quantity}
+            </div>
+            <button
+              onClick={handleIncrease}
+              className="px-3 py-2 bg-green-200 rounded-r hover:bg-green-300 active:scale-95"
+            >
+              <Plus size={18} />
+            </button>
+          </div>
+
+          <button
+            onClick={handleAddToCart}
+            className="px-8 py-3 mt-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
+          >
             Add to Cart
           </button>
         </div>
       </div>
+
+      {showModal && (
+        <ModalQuestion
+          question={"You need login to add product"}
+          onYes={() => {
+            setShowModal(false);
+            navigate("/auth");
+          }}
+          onNo={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

@@ -12,7 +12,10 @@ const SearchBar = ({ onSelectProduct }) => {
   // Event close searchbar as click other zone
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (!e.target.closest(".search-bar-container")) {
+      if (
+        !e.target.closest(".search-bar-container") &&
+        !e.target.closest(".search-icon-button")
+      ) {
         setKeyword("");
         onSelectProduct?.();
       }

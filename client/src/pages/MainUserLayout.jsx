@@ -1,17 +1,14 @@
-import React, { useContext } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
 import { Lock, UserCircle } from "lucide-react";
 
 const MainUserLayout = () => {
-  const { user } = useContext(AuthContext);
   return (
     <div className="mb-10 flex">
       {/* ---------------------- SideBar -------------------------- */}
       <aside className="w-64 bg-blue-200 rounded-2xl shadow-md p-5">
         <nav className="flex flex-col gap-4">
           <NavLink
-            to={`/information/${user._id}`}
+            to={`/information`}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
                 isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
@@ -23,7 +20,7 @@ const MainUserLayout = () => {
           </NavLink>
 
           <NavLink
-            to={`/change-password/${user._id}`}
+            to={`/change-password`}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
                 isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
