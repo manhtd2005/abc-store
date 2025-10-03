@@ -1,6 +1,6 @@
 const DeleteModal = ({ message, onConfirm, onCancel }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
       <div className="bg-white rounded-xl shadow-lg p-6 w-80 text-center">
         {/* Tiêu đề */}
         <h2 className="text-lg font-semibold mb-4">{message}</h2>

@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
 import { ProductContext } from "../contexts/ProductContext";
+import { NotificationContext } from "../contexts/NotificationContext";
 import ProductItemView from "../components/ProductItemView";
 import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
-import { addNotification } from "../contexts/NotificationContext.jsx";
 
 const AllProducts = () => {
-  const { products, loading, removeProduct, updateProduct } =
-    useContext(ProductContext);
+  const { products, loading, removeProduct, updateProduct } = useContext(ProductContext);
+
+  const { addNotification } = useContext(NotificationContext); 
 
   const [selectedProduct, setSelectedProduct] = useState(null); // xem chi tiết
   const [deleteTarget, setDeleteTarget] = useState(null); // lưu sản phẩm muốn xóa
@@ -21,7 +22,6 @@ const AllProducts = () => {
       updateProduct(updatedProduct._id, updatedProduct);
       setSelectedProduct(null);
       toast.success("Product updated successfully");
-      updateProduct(updatedProduct);
       addNotification(`Sản phẩm "${updatedProduct.title}" đã được cập nhật.`);
     }
   };
@@ -150,7 +150,10 @@ const AllProducts = () => {
           product={selectedProduct}
           onClose={handleCloseModal}
           onSave={handleSaveProduct}
-          onDelete={() => removeProduct(selectedProduct._id)}
+          // The line below calls removeProduct directly, which is redundant 
+          // because the product view typically handles updates, not deletions.
+          // I commented it out assuming the deletion is only handled by the main table button/modal.
+          //onDelete={() => removeProduct(selectedProduct._id)} 
         />
       )}
 

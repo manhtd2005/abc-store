@@ -3,12 +3,12 @@ import AuthView from "../components/AuthView";
 import { UserContext } from "../contexts/UserContext";
 import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
-import { addNotification } from "../contexts/NotificationContext.jsx";
+import { NotificationContext } from "../contexts/NotificationContext.jsx";
 
 export default function AllAuth() {
   const { users, deleteUser, updateUser } = useContext(UserContext);
-
-  const [selectedAccount, setSelectedAccount] = useState(null);
+  const { addNotification } = useContext(NotificationContext);
+  const [selectedAccount] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null); // lưu user muốn xoá
 
@@ -16,7 +16,7 @@ export default function AllAuth() {
   const handleSave = (updatedAccount) => {
     updateUser(updatedAccount);
     toast.success("User updated successfully!");
-    addNotification(`Người dùng "${updatedAccount.name.firstname} ${updatedAccount.name.lastname}" đã được cập nhật.`);
+    addNotification(`Account "${updatedAccount.name.firstname} ${updatedAccount.name.lastname}" has been updated!.`);
     setShowModal(false);
   };
 
@@ -25,7 +25,7 @@ export default function AllAuth() {
     if (deleteTarget) {
       deleteUser(deleteTarget.id);
       toast.success("User deleted successfully!");
-      addNotification(`Người dùng "${deleteTarget.name.firstname} ${deleteTarget.name.lastname}" đã bị xoá.`);
+      addNotification(`Account "${deleteTarget.name.firstname} ${deleteTarget.name.lastname}" has been deleted!`);
       setDeleteTarget(null);
     }
   };
@@ -41,30 +41,63 @@ export default function AllAuth() {
         <table className="w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100 text-left">
-              <th className="p-3 text-sm font-bold uppercase border">ID</th>
               <th className="p-3 text-sm font-bold uppercase border">Name</th>
-              <th className="p-3 text-sm font-bold uppercase border">Email</th>
-              <th className="p-3 text-sm font-bold uppercase border">PhoneNumb.</th>
+              <th className="p-3 text-sm font-bold uppercase border">Contact</th>
+              <th className="p-3 text-sm font-bold uppercase border">Address</th>
               <th className="p-3 text-sm font-bold uppercase border">Operate</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((u, index) => (
+            {users.map((u) => (
               <tr key={u.id} className="hover:bg-gray-50">
-                <td className="p-3 border font-bold">{index + 1}</td>
-                <td className="p-3 border">{u.name.firstname} {u.name.lastname}</td>
-                <td className="p-3 border">{u.email}</td>
-                <td className="p-3 border">{u.phone}</td>
-                <td className="p-3 border flex gap-2">
-                  <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 cursor-pointer rounded"
-                    onClick={() => {
-                      setSelectedAccount(u);
-                      setShowModal(true);
-                    }}
-                  >
-                    View Information
-                  </button>
+                {/* Cột 1: Name */}
+                <td className="p-3 border text-sm align-top">
+                  <div className="mb-1">
+                    <span className="font-semibold text-gray-800">Username: </span>
+                    <span className="text-gray-600 font-medium">{u.username}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-800">Name: </span>
+                    <span className="text-gray-600">
+                      {u.name.firstname} {u.name.lastname}
+                    </span>
+                  </div>
+                </td>
+
+                {/* Cột 2: Contact */}
+                <td className="p-3 border text-sm align-top">
+                  <div className="mb-1">
+                    <span className="font-semibold text-gray-800">Email: </span>
+                    <span className="text-gray-600">{u.email}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-800">Tel: </span>
+                    <span className="text-gray-600">{u.phone}</span>
+                  </div>
+                </td>
+
+                {/* Cột 3: Address */}
+                <td className="p-3 border text-sm align-top">
+                  <div className="mb-1">
+                    <span className="font-semibold text-gray-800">Number: </span>
+                    <span className="text-gray-600">{u.address.number}</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold text-gray-800">Street: </span>
+                    <span className="text-gray-600">{u.address.street}</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold text-gray-800">City: </span>
+                    <span className="text-gray-600">{u.address.city}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-gray-800">Zipcode: </span>
+                    <span className="text-gray-600">{u.address.zipcode}</span>
+                  </div>
+                </td>
+
+                {/* Cột 4: Operate */}
+                <td className="p-3 border align-top">
                   <button
                     className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 cursor-pointer rounded"
                     onClick={() => setDeleteTarget(u)}
@@ -76,7 +109,7 @@ export default function AllAuth() {
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={5} className="p-3 border text-center text-gray-500">
+                <td colSpan={4} className="p-3 border text-center text-gray-500">
                   No accounts yet.
                 </td>
               </tr>
@@ -97,7 +130,7 @@ export default function AllAuth() {
       {/* Modal Delete */}
       {deleteTarget && (
         <DeleteModel
-          message={`Are you sure you want to delete this user?`}
+          message={`Are you sure you want to delete account "${deleteTarget.name.firstname} ${deleteTarget.name.lastname}"?`}
           onConfirm={handleConfirmDelete}
           onCancel={() => setDeleteTarget(null)}
         />

@@ -8,9 +8,9 @@ import {
 import { jwtDecode } from "jwt-decode";
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const AuthContext = createContext();
+export const UserContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [user, setUser] = useState(() => {
     const u = localStorage.getItem("user");
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  //Lấy thông tin tất cả users
+  // Lấy thông tin tất cả users
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -75,10 +75,15 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  // ✅ thêm mới user thủ công (cho AddAuth.jsx)
+  const addUser = (newUser) => {
+    setUsers((prev) => [...prev, newUser]);
+  };
 
   return (
-    <AuthContext.Provider
+    <UserContext.Provider
       value={{
         users,
         loading,
@@ -87,9 +92,10 @@ export const AuthProvider = ({ children }) => {
         loginUser,
         signinUser,
         fetchUsers,
+        addUser, // thêm vào đây
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };

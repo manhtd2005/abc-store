@@ -38,6 +38,14 @@ const NotificationProvider = ({ children }) => {
         const updated = notifications.map((n) => ({ ...n, read: true }));
         setNotifications(updated);
     };
+    
+    // 🌟 ADDED: Đánh dấu 1 thông báo đã đọc theo id (Needed by Notification.jsx)
+    const markAsRead = (id) => {
+        const updated = notifications.map((n) => 
+            n.id === id ? { ...n, read: true } : n
+        );
+        setNotifications(updated);
+    };
 
     // Xoá 1 thông báo theo id
     const deleteNotification = (id) => {
@@ -51,6 +59,7 @@ const NotificationProvider = ({ children }) => {
         notifications,
         addNotification,
         markAllRead,
+        markAsRead, // 🌟 ADDED to context value
         unreadCount,
         deleteNotification
     };

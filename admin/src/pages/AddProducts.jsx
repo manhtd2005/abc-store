@@ -1,10 +1,11 @@
 import { useState, useContext } from "react";
 import { ProductContext } from "../contexts/ProductContext";
 import { toast } from "react-toastify";
-import { addNotification } from "../contexts/NotificationContext.jsx";
+import { NotificationContext } from "../contexts/NotificationContext.jsx";
 
 export default function AddProducts() {
   const { addProduct } = useContext(ProductContext);
+  const { addNotification } = useContext(NotificationContext);
 
   // State form
   const [title, setTitle] = useState("");

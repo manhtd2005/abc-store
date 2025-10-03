@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../contexts/UserContext";
-import { addNotification, NotificationContext } from "../contexts/NotificationContext";
+import { NotificationContext } from "../contexts/NotificationContext";
 
 export default function AddAuth() {
   const { addNotification } = useContext(NotificationContext)
