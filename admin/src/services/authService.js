@@ -1,21 +1,16 @@
 import api from "./api";
 
-// Đăng nhập
-export const loginApi = async (credentials) => {
-  const res = await api.post("/users/login", credentials);
+// Đăng ký user dưới quyền admin
+export const signinByAdminApi = async (userData) => {
+  const res = await api.post("/users/registeruseradmin", userData);
   return res.data;
 };
 
-// Đăng ký
-export const signinApi = async (userData) => {
-  const res = await api.post("/users/register", userData);
-  return res.data;
-};
-
+// Lấy thông tin tất cả user
 export const getUsersAPI = async () => {
-    const res = await api.get("/users/allusers")
-    return res.data;
-}
+  const res = await api.get("/users/allusers");
+  return res.data;
+};
 
 // Lấy thông tin 1 user theo id
 export const getUserById = async (id) => {
@@ -23,14 +18,8 @@ export const getUserById = async (id) => {
   return res.data;
 };
 
-// Cập nhật thông tin user
-export const updateUserApi = async (id, data) => {
-  const res = await api.put(`/users/update/${id}`, data);
-  return res.data;
-};
-
-// Cập nhật password của user
-export const changePasswordApi = async (id, data) => {
-  const res = await api.put(`/users/change-password/${id}`, data);
+// Xóa user
+export const deleteUserApi = async (id) => {
+  const res = await api.delete(`/users/remove/${id}`);
   return res.data;
 };

@@ -60,7 +60,7 @@ export default function AddProducts() {
       setImagePreview(null);
 
       toast.success("Product created successfully!");
-      addNotification(`Sản phẩm "${title}" đã được tạo thành công.`);
+      addNotification(`Product "${title}" created successfully!`);
     } catch (error) {
       toast.error("Error creating product.");
       console.error(error);
@@ -75,7 +75,7 @@ export default function AddProducts() {
         </h1>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Title */}
+          {/* ------------------------ Title ----------------------------- */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Title
@@ -89,8 +89,8 @@ export default function AddProducts() {
             />
           </div>
 
-          {/* Price + Category */}
           <div className="grid grid-cols-2 gap-6">
+            {/* ---------------------------- Price ------------------------------ */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Price
@@ -105,6 +105,7 @@ export default function AddProducts() {
               />
             </div>
 
+            {/* ------------------------ Category --------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Category
@@ -122,7 +123,7 @@ export default function AddProducts() {
             </div>
           </div>
 
-          {/* Description */}
+          {/*--------------------------- Description ---------------------------*/}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Description
@@ -136,9 +137,8 @@ export default function AddProducts() {
             />
           </div>
 
-          {/* Image + Rating */}
           <div className="grid grid-cols-2 gap-6">
-            {/* Image */}
+            {/*--------------------------- Image ----------------------------*/}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Product Image
@@ -164,8 +164,8 @@ export default function AddProducts() {
               )}
             </div>
 
-            {/* Rating */}
             <div>
+              {/*------------------------ Rating: Rate ----------------------------*/}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Rating (Rate)
@@ -177,7 +177,6 @@ export default function AddProducts() {
                   onChange={(e) => {
                     let value = parseFloat(e.target.value);
                     if (isNaN(value)) value = 0;
-                    // Giới hạn từ 0 đến 5
                     if (value < 0) value = 0;
                     if (value > 5) value = 5;
                     setRate(value);
@@ -187,6 +186,7 @@ export default function AddProducts() {
                 />
               </div>
 
+              {/*------------------------ Rating: Count ----------------------------*/}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Rating (Count)
@@ -202,7 +202,7 @@ export default function AddProducts() {
             </div>
           </div>
 
-          {/* Buttons */}
+          {/* ------------------------------- Buttons ---------------------------------------- */}
           <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"

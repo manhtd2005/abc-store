@@ -1,74 +1,72 @@
 import { createContext, useState, useEffect } from "react";
-import Cookies from "js-cookie";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const NotificationContext = createContext();
 
 const NotificationProvider = ({ children }) => {
-    const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
-    // Load từ cookies khi mount
-    useEffect(() => {
-        const stored = Cookies.get("notifications");
-        if (stored) {
-            setNotifications(JSON.parse(stored));
-        }
-    }, []);
-
-    // Mỗi khi notifications thay đổi thì lưu lại vào cookies (chỉ giữ 20 cái mới nhất)
-    useEffect(() => {
-        const latestNotifications = notifications.slice(0, 20);
-        Cookies.set("notifications", JSON.stringify(latestNotifications));
-    }, [notifications]);
-
-    // Thêm thông báo mới
-    const addNotification = (message) => {
-        const newNotification = {
-            id: Date.now(),
-            message,
-            read: false,
-            time: new Date().toLocaleString(),
-        };
-
-        setNotifications((prev) => [newNotification, ...prev].slice(0, 20));
+  //  Thêm thông báo mới
+  const addNotification = (message) => {
+    const newNotification = {
+      id: Date.now(),
+      message,
+      read: false, // trạng thái đọc
+      time: new Date().toLocaleString(), // thời gian tạo
     };
 
-    // Đánh dấu tất cả đã đọc
-    const markAllRead = () => {
-        const updated = notifications.map((n) => ({ ...n, read: true }));
-        setNotifications(updated);
-    };
-    
-    // 🌟 ADDED: Đánh dấu 1 thông báo đã đọc theo id (Needed by Notification.jsx)
-    const markAsRead = (id) => {
-        const updated = notifications.map((n) => 
-            n.id === id ? { ...n, read: true } : n
-        );
-        setNotifications(updated);
-    };
+    setNotifications((prev) => [newNotification, ...prev]);
+  };
 
-    // Xoá 1 thông báo theo id
-    const deleteNotification = (id) => {
-        const updated = notifications.filter((n) => n.id !== id);
-        setNotifications(updated);
-    };
-
-    const unreadCount = notifications.filter((n) => !n.read).length;
-
-    const value = {
-        notifications,
-        addNotification,
-        markAllRead,
-        markAsRead, // 🌟 ADDED to context value
-        unreadCount,
-        deleteNotification
-    };
-
-    return (
-        <NotificationContext.Provider value={value}>
-            {children}
-        </NotificationContext.Provider>
+  //  Đánh dấu tất cả đã đọc
+  const markAllRead = () => {
+    setNotifications((prev) =>
+      prev.map((notification) => ({ ...notification, read: true }))
     );
+  };
+
+  //  Xoá 1 thông báo theo id
+  const deleteNotification = (id) => {
+    setNotifications((prev) =>
+      prev.filter((notification) => notification.id !== id)
+    );
+  };
+
+  //  Đếm số lượng thông báo chưa đọc
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length;
+
+  //  Load từ localStorage khi mount
+  useEffect(() => {
+    const stored = localStorage.getItem("notifications");
+    if (stored) {
+      try {
+        setNotifications(JSON.parse(stored));
+      } catch (err) {
+        console.error("Không parse được notifications:", err);
+      }
+    }
+  }, []);
+
+  //  Mỗi khi notifications thay đổi thì lưu lại vào localStorage
+  useEffect(() => {
+    localStorage.setItem("notifications", JSON.stringify(notifications));
+  }, [notifications]);
+
+  const value = {
+    notifications,
+    addNotification,
+    markAllRead,
+    unreadCount,
+    deleteNotification,
+  };
+
+  return (
+    <NotificationContext.Provider value={value}>
+      {children}
+    </NotificationContext.Provider>
+  );
 };
 
 export default NotificationProvider;

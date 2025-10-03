@@ -1,65 +1,94 @@
-import { useState, useEffect, useRef, useContext } from "react"; // 🌟 Thêm useContext
+import { useState, useContext } from "react"; // 🌟 Thêm useContext
 import assets from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 import Notification from "../components/Notification";
 import { NotificationContext } from "../contexts/NotificationContext";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 const Header = ({ isModalOpen }) => {
+  const { unreadCount } = useContext(NotificationContext);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { unreadCount } = useContext(NotificationContext);
 
-  // Đóng khi click ngoài
+  // Đóng khi click ra ngoài
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
-  const headerClass = `w-full bg-white shadow-md ${isModalOpen ? 'opacity-50 pointer-events-none' : 'opacity-100'}`;
-
   return (
-    <header className={headerClass}>
+    <header
+      className={`w-full bg-white shadow-md ${
+        isModalOpen ? "opacity-50 pointer-events-none" : "opacity-100"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo & Menu giữ nguyên */}
           <div className="flex-shrink-0 text-xl font-bold text-blue-600">
             ABC Store
           </div>
+
+          {/* -------------------------- Navbar ------------------------------ */}
           <nav className="hidden md:flex space-x-8">
-            <NavLink to={"/allProducts"} className="text-gray-700 hover:text-blue-600 transition font-medium">Products</NavLink>
-            <NavLink to={"/allOrders"} className="text-gray-700 hover:text-blue-600 transition font-medium">Orders</NavLink>
-            <NavLink to={"/allAuth"} className="text-gray-700 hover:text-blue-600 transition font-medium">Accounts</NavLink>
+            <NavLink
+              to={"/allProducts"}
+              className="text-gray-700 hover:text-blue-600 transition font-bold"
+            >
+              Products
+            </NavLink>
+            <NavLink
+              to={"/allOrders"}
+              className="text-gray-700 hover:text-blue-600 transition font-bold"
+            >
+              Orders
+            </NavLink>
+            <NavLink
+              to={"/allAuth"}
+              className="text-gray-700 hover:text-blue-600 transition font-bold"
+            >
+              Accounts
+            </NavLink>
           </nav>
 
-          {/* Notification */}
+          {/*----------------------------- Notification----------------------- */}
           <div
             ref={dropdownRef}
-            className="relative flex items-center space-x-1 cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(true)}
+            className={`relative flex items-center cursor-pointer gap-3 p-3 rounded-2xl ${
+              unreadCount == 0 ? "" : "bg-amber-200"
+            } `}
           >
-            <img src={assets.bell} alt="notification bell" className="w-6 h-6" />
-            {unreadCount > 0 && (
-              <span className="relative -bottom-1 -left-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
-                {unreadCount}
-              </span>
-            )}
+            <div className="relative">
+              <img src={assets.bell} className="w-6 h-6" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
+                  {unreadCount}
+                </span>
+              )}
+            </div>
+
             <span className="text-gray-700 font-medium hidden sm:inline hover:opacity-80">
               Notification
             </span>
+
             {isOpen && (
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-50">
+              <div className="absolute top-12 left-0 z-50">
                 <Notification />
               </div>
             )}
           </div>
 
-          {/* Logout giữ nguyên */}
+          {/* --------------------------- Logout ----------------------------------- */}
           <div>
             <button
               onClick={() => navigate("/")}

@@ -2,55 +2,43 @@ import { useContext } from "react";
 import { NotificationContext } from "../contexts/NotificationContext";
 
 const Notification = () => {
-  const {
-    notifications: contextNotifications,
-    markAsRead: contextMarkAsRead,
-    deleteNotification: contextDeleteNotification
-  } = useContext(NotificationContext);
-
-  const notifications = contextNotifications;
-
-  const handleMarkAsRead = (id) => {
-    contextMarkAsRead(id);
-  };
-
-  const handleDelete = (id) => {
-    contextDeleteNotification(id);
-  };
+  const { notifications, markAllRead, deleteNotification } =
+    useContext(NotificationContext);
 
   return (
-    <div className="bg-white shadow-lg rounded-lg w-80 p-4">
-      <h3 className="text-lg font-bold mb-2">Notifications</h3>
+    <div className="bg-white shadow-lg rounded-lg border w-80 p-2">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-lg font-bold">Notifications</h3>
+
+        {/* -------------------- Mark All Read ----------------- */}
+        <button onClick={markAllRead} className="p-1 underline text-blue-500">
+          Mark All Read
+        </button>
+      </div>
+
       {notifications.length === 0 ? (
         <p className="text-gray-500">No notification!</p>
       ) : (
         <ul className="max-h-60 overflow-y-auto">
-          {notifications.map((n) => (
+          {/* ------------------------- List notification ------------------- */}
+          {notifications.map((notification) => (
             <li
-              key={n.id}
-              className={`p-2 mb-2 border rounded ${n.read ? "bg-gray-100" : "bg-blue-50"
-                }`}
+              key={notification.id}
+              className={`p-2 mb-2 border rounded ${
+                notification.read ? "bg-white" : "bg-blue-300"
+              }`}
             >
               <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-800">{n.message}</p>
-                <div className="flex space-x-2">
-                  {!n.read && (
-                    <button
-                      className="text-xs text-green-600"
-                      onClick={() => handleMarkAsRead(n.id)}
-                    >
-                      Đọc
-                    </button>
-                  )}
-                  <button
-                    className="text-xs text-red-600"
-                    onClick={() => handleDelete(n.id)}
-                  >
-                    Xoá
-                  </button>
-                </div>
+                <p className="text-sm text-gray-800">{notification.message}</p>
+
+                <button
+                  className="text-xs text-red-500 hover:text-red-700 p-1"
+                  onClick={() => deleteNotification(notification.id)}
+                >
+                  Delete
+                </button>
               </div>
-              <span className="text-xs text-gray-500">{n.time}</span>
+              <span className="text-xs text-gray-500">{notification.time}</span>
             </li>
           ))}
         </ul>

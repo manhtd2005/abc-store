@@ -1,98 +1,93 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import {
-  loginApi,
-  signinApi,
-  getUserById,
   getUsersAPI,
+  deleteUserApi,
+  signinByAdminApi,
 } from "../services/authService";
-import { jwtDecode } from "jwt-decode";
+import { useCallback } from "react";
+import { useEffect } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
-  const [user, setUser] = useState(() => {
-    const u = localStorage.getItem("user");
-    return u ? JSON.parse(u) : null;
-  });
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Lưu token vào localStorage
-  useEffect(() => {
-    if (token) localStorage.setItem("token", token);
-    else localStorage.removeItem("token");
-  }, [token]);
-
-  // Lưu user vào localStorage
-  useEffect(() => {
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    else localStorage.removeItem("user");
-  }, [user]);
-
-  // Đăng nhập
-  const loginUser = async ({ username, password }) => {
+  // Đăng ký dưới quyền admin
+  const signinUser = async ({
+    email,
+    username,
+    password,
+    name: { firstname, lastname },
+    phone,
+    address: { city, street, number, zipcode },
+  }) => {
     try {
-      const res = await loginApi({ username, password });
+      const res = await signinByAdminApi({
+        email,
+        username,
+        password,
+        name: { firstname, lastname },
+        phone,
+        address: { city, street, number, zipcode },
+      });
       if (res && res.success) {
-        setToken(res.token);
-        const decoded = jwtDecode(res.token);
-        const userId = decoded.id; // bạn đã sign {id} trong token
-        const u = await getUserById(userId);
-        setUser(u.user);
-        return { success: true, message: "Đăng nhập thành công" };
+        // Thêm user mới vào state ngay lập tức
+        const newUser = {
+          _id: res.user._id,
+          username: res.user.username,
+          email: res.user.email,
+          name: { firstname, lastname },
+          phone,
+          address: { city, street, number, zipcode },
+        };
+
+        setUsers((prev) => [...prev, newUser]);
+        return { success: true, message: "Register success" };
       }
-      return { success: false, message: res.message || "Đăng nhập thất bại" };
+      return { success: false, message: res.message || "Register false" };
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Có lỗi khi đăng nhập" };
-    }
-  };
-
-  // Đăng ký
-  const signinUser = async ({ username, email, password }) => {
-    try {
-      const res = await signinApi({ username, email, password });
-      if (res && res.success) {
-        return { success: true, message: "Đăng ký thành công" };
-      }
-      return { success: false, message: res.message || "Đăng ký thất bại" };
-    } catch (error) {
-      console.error(error);
-      return { success: false, message: "Có lỗi khi đăng ký" };
+      return { success: false, message: "Error Register" };
     }
   };
 
   // Lấy thông tin tất cả users
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getUsersAPI();
-      setUsers(data || []);
+      setUsers(data.users || []);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  // ✅ thêm mới user thủ công (cho AddAuth.jsx)
-  const addUser = (newUser) => {
-    setUsers((prev) => [...prev, newUser]);
-  };
+  // Xoá user
+  const removeUser = useCallback(async (id) => {
+    try {
+      await deleteUserApi(id);
+      setUsers((prev) => prev.filter((user) => user._id !== id));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   return (
     <UserContext.Provider
       value={{
         users,
         loading,
-        token,
-        user,
-        loginUser,
         signinUser,
         fetchUsers,
-        addUser, // thêm vào đây
+        removeUser,
       }}
     >
       {children}

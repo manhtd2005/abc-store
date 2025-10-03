@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthAdminContext } from "../contexts/AuthAdminContext";
 import { toast } from "react-toastify";
+import { NotificationContext } from "../contexts/NotificationContext";
 
 const Login = () => {
   const usernameRef = useRef(null);
@@ -12,6 +13,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useContext(AuthAdminContext);
+  const { addNotification } = useContext(NotificationContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ const Login = () => {
 
     if (login(username, password)) {
       setError("");
+      addNotification("Login success");
       navigate("/allProducts");
       toast.success("Login account admin success");
     } else {
@@ -32,7 +35,6 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-lg">
-        {/* Title */}
         <h2 className="text-2xl font-bold text-center text-gray-800">
           Welcome Back
         </h2>
@@ -40,9 +42,8 @@ const Login = () => {
           Please sign in to continue
         </p>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Username */}
+          {/* ------------------------- Username ---------------------------------- */}
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Username
@@ -56,7 +57,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Password */}
+          {/* ------------------------- Password ---------------------------------- */}
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Password
@@ -72,7 +73,7 @@ const Login = () => {
 
           {error && <p className="text-red-600">{error}</p>}
 
-          {/* Submit Button */}
+          {/* -------------------- Submit Button ----------------------------------- */}
           <button
             type="submit"
             className="w-full px-4 py-2 text-white bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-700 focus:ring-4 transition"

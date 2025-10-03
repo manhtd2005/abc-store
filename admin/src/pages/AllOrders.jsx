@@ -25,13 +25,16 @@ export default function AllOrders() {
         // Map dữ liệu
         const mappedOrders = carts.slice(0, 5).map((cart) => {
           const user = users.find((u) => u.id === cart.userId);
-          const customerName = `${user?.name?.firstname ?? ""} ${user?.name?.lastname ?? ""
-            }`;
+          const customerName = `${user?.name?.firstname ?? ""} ${
+            user?.name?.lastname ?? ""
+          }`;
           const email = user?.email ?? "unknown";
           const phone = user?.phone ?? "N/A";
 
           const orderProducts = cart.products.map((p) => {
-            const productInfo = products.find((prod) => prod.id === p.productId);
+            const productInfo = products.find(
+              (prod) => prod.id === p.productId
+            );
             return {
               id: productInfo?.id,
               name: productInfo?.title,
@@ -52,7 +55,7 @@ export default function AllOrders() {
             email,
             phone,
             products: orderProducts,
-            total: total.toLocaleString("en-US") + "$",
+            total: total.toLocaleString("en-US"),
             paymentMethod: cart.id % 2 === 0 ? "Credit Card" : "COD",
           };
         });
@@ -85,16 +88,22 @@ export default function AllOrders() {
         <table className="w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100 text-left">
-              <th className="p-3 text-sm font-bold uppercase border">Customer</th>
+              <th className="p-3 text-sm font-bold uppercase border">
+                Customer
+              </th>
               <th className="p-3 text-sm font-bold uppercase border">
                 Email & PhoneNumb.
               </th>
-              <th className="p-3 text-sm font-bold uppercase border">Products</th>
+              <th className="p-3 text-sm font-bold uppercase border">
+                Products
+              </th>
               <th className="p-3 text-sm font-bold uppercase border">Total</th>
               <th className="p-3 text-sm font-bold uppercase border">
                 Payment Method
               </th>
-              <th className="p-3 text-sm font-bold uppercase border">Operate</th>
+              <th className="p-3 text-sm font-bold uppercase border">
+                Operate
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -116,15 +125,15 @@ export default function AllOrders() {
                       <div>
                         <p>{p.name}</p>
                         <p className="text-sm text-gray-500">
-                          Số lượng: {p.quantity} | Đơn giá:{" "}
-                          {p.price.toLocaleString("vi-VN")}đ
+                          Quantity: {p.quantity} | Price:{" "}
+                          {p.price.toLocaleString("vi-VN")} VND
                         </p>
                       </div>
                     </div>
                   ))}
                 </td>
                 <td className="p-3 border font-bold text-blue-600">
-                  {order.total}
+                  {order.total} VND
                 </td>
                 <td className="p-3 border">{order.paymentMethod}</td>
                 <td className="p-3 border">

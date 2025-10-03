@@ -109,6 +109,74 @@ const registerUser = async (req, res) => {
   }
 };
 
+// Route for register user by admin
+const registerUserByAdmin = async (req, res) => {
+  try {
+    const {
+      email,
+      username,
+      password,
+      phone,
+      name = {},
+      address = {},
+    } = req.body;
+
+    const { firstname = "", lastname = "" } = name;
+    const { city = "", street = "", number = "", zipcode = "" } = address;
+
+    //  Check username
+    const exists = await userModel.findOne({ username });
+    if (exists) {
+      return res.json({ success: false, message: "Username already exists" });
+    }
+
+    //  Validate email
+    if (!validator.isEmail(email)) {
+      return res.json({
+        success: false,
+        message: "Please enter a valid email",
+      });
+    }
+
+    //  Validate password length
+    if (password.length < 8) {
+      return res.json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
+    }
+
+    //  Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    //  Create new user
+    const newUser = new userModel({
+      email,
+      username,
+      password: hashedPassword,
+      name: { firstname, lastname },
+      phone,
+      address: { city, street, number, zipcode },
+    });
+
+    const user = await newUser.save();
+
+    //  Trả về token + user
+    res.json({
+      success: true,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 // Route for all users
 const getAllUsers = async (req, res) => {
   try {
@@ -185,6 +253,27 @@ const updateUser = async (req, res) => {
   }
 };
 
+// Remove user
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedUser = await userModel.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    res.json({
+      success: true,
+      message: `User ${deletedUser.username} deleted successfully`,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 // Change password
 const changePassword = async (req, res) => {
   try {
@@ -232,5 +321,7 @@ export {
   getAllUsers,
   getSingleUser,
   updateUser,
+  deleteUser,
   changePassword,
+  registerUserByAdmin,
 };

@@ -1,13 +1,12 @@
 import { useState, useContext } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { UserContext } from "../contexts/UserContext";
 import { NotificationContext } from "../contexts/NotificationContext";
 
 export default function AddAuth() {
-  const { addNotification } = useContext(NotificationContext)
-  const { users, addUser } = useContext(UserContext);
-  const nextId = users.length + 1;
+  const { addNotification } = useContext(NotificationContext);
+  const { signinUser } = useContext(UserContext);
+  const [errors, setErrors] = useState({});
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -21,71 +20,114 @@ export default function AddAuth() {
   const [zipcode, setZipcode] = useState("");
 
   const validateForm = () => {
+    let newErrors = {};
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error('Must enter this form "example@gmail.com"');
-      return false;
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = 'Must enter this form "example@gmail.com"';
+    }
+
+    if (!username) {
+      newErrors.username = "Username is required";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (!firstName) {
+      newErrors.firstName = "First name is required";
+    }
+    if (!lastName) {
+      newErrors.lastName = "Last name is required";
+    }
+
+    if (phone && isNaN(phone)) {
+      newErrors.phone = "Phone must be number only!";
     }
 
     const cityRegex = /^[A-Za-z\s]+$/;
     if (city && !cityRegex.test(city)) {
-      toast.error("City must contain letters only!");
-      return false;
+      newErrors.city = "City must contain letters only!";
+    }
+
+    if (!street) {
+      newErrors.street = "Street is required";
     }
 
     if (number && isNaN(number)) {
-      toast.error("Must enter number only!");
-      return false;
+      newErrors.number = "Must enter number only!";
     }
 
     const zipRegex = /^[0-9]+$/;
     if (zipcode && !zipRegex.test(zipcode)) {
-      toast.error("Numbers only!");
-      return false;
+      newErrors.zipcode = "Numbers only!";
     }
 
-    return true;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     const newAccount = {
-      id: nextId,
       email,
       username,
       password,
       name: { firstname: firstName, lastname: lastName },
-      phone,
-      address: { city, street, number, zipcode },
+      phone: phone ? Number(phone) : undefined,
+      address: {
+        city,
+        street,
+        number: number ? Number(number) : undefined,
+        zipcode,
+      },
     };
 
-    addUser(newAccount);
-    toast.success("Successfully created new account!");
-    addNotification(`Tài khoản "${username}" đã được tạo thành công.`);
+    try {
+      const res = await signinUser(newAccount);
+      console.log(res);
 
-    // Reset form
-    setEmail("");
-    setUsername("");
-    setPassword("");
-    setFirstName("");
-    setLastName("");
-    setPhone("");
-    setCity("");
-    setStreet("");
-    setNumber("");
-    setZipcode("");
+      if (res.success) {
+        setEmail("");
+        setUsername("");
+        setPassword("");
+        setFirstName("");
+        setLastName("");
+        setPhone("");
+        setCity("");
+        setStreet("");
+        setNumber("");
+        setZipcode("");
+        setErrors({});
+
+        toast.success("Successfully created new account!");
+        addNotification(`Account "${username}" created.`);
+      } else {
+        toast.error(res.message || "Register failed");
+      }
+    } catch (error) {
+      toast.error("Error creating account.");
+      console.error(error);
+    }
   };
 
   return (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">
       <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">➕ Add Account</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          ➕ Add Account
+        </h1>
 
         <form className="space-y-6" onSubmit={handleCreate}>
-          {/* First + Last Name */}
           <div className="grid grid-cols-2 gap-6">
+            {/* -------------------------- First name --------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 First Name
@@ -97,7 +139,12 @@ export default function AddAuth() {
                 placeholder="John"
                 className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              {errors.firstName && (
+                <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+              )}
             </div>
+
+            {/* -------------------------- Last name --------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Last Name
@@ -109,10 +156,13 @@ export default function AddAuth() {
                 placeholder="Doe"
                 className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              {errors.lastName && (
+                <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+              )}
             </div>
           </div>
 
-          {/* Email */}
+          {/* -------------------------- Email --------------------------- */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -124,10 +174,13 @@ export default function AddAuth() {
               placeholder="example@gmail.com"
               className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
-          {/* Username + Password */}
           <div className="grid grid-cols-2 gap-6">
+            {/* -------------------------- Username --------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Username
@@ -139,7 +192,12 @@ export default function AddAuth() {
                 placeholder="johndoe123"
                 className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+              )}
             </div>
+
+            {/* -------------------------- Password --------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -151,10 +209,13 @@ export default function AddAuth() {
                 placeholder="Enter password"
                 className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
             </div>
           </div>
 
-          {/* Phone */}
+          {/* -------------------------- Phone --------------------------- */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone
@@ -166,37 +227,13 @@ export default function AddAuth() {
               placeholder="1-570-236-7033"
               className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
-          </div>
-
-          {/* Address: City, Street, Number, Zipcode */}
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                City
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="City"
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Street
-              </label>
-              <input
-                type="text"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-                placeholder="Street"
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-            </div>
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-6">
+            {/* -------------------------- House Number --------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 House Number
@@ -208,7 +245,48 @@ export default function AddAuth() {
                 placeholder="Enter house number"
                 className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              {errors.number && (
+                <p className="text-red-500 text-sm mt-1">{errors.number}</p>
+              )}
             </div>
+
+            {/* -------------------------- Street --------------------------- */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Street
+              </label>
+              <input
+                type="text"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="Street"
+                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+              {errors.street && (
+                <p className="text-red-500 text-sm mt-1">{errors.street}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            {/* -------------------------- City --------------------------- */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                City
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="City"
+                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+              {errors.city && (
+                <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+              )}
+            </div>
+
+            {/* -------------------------- Zipcode--------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Zipcode
@@ -220,10 +298,13 @@ export default function AddAuth() {
                 placeholder="Enter zipcode"
                 className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              {errors.zipcode && (
+                <p className="text-red-500 text-sm mt-1">{errors.zipcode}</p>
+              )}
             </div>
           </div>
 
-          {/* Buttons */}
+          {/* ----------------------- Buttons --------------------------*/}
           <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"
@@ -252,8 +333,6 @@ export default function AddAuth() {
           </div>
         </form>
       </div>
-
-      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 }

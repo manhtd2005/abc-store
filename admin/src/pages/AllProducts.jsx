@@ -6,9 +6,10 @@ import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
 
 const AllProducts = () => {
-  const { products, loading, removeProduct, updateProduct } = useContext(ProductContext);
+  const { products, loading, removeProduct, updateProduct } =
+    useContext(ProductContext);
 
-  const { addNotification } = useContext(NotificationContext); 
+  const { addNotification } = useContext(NotificationContext);
 
   const [selectedProduct, setSelectedProduct] = useState(null); // xem chi tiết
   const [deleteTarget, setDeleteTarget] = useState(null); // lưu sản phẩm muốn xóa
@@ -22,7 +23,7 @@ const AllProducts = () => {
       updateProduct(updatedProduct._id, updatedProduct);
       setSelectedProduct(null);
       toast.success("Product updated successfully");
-      addNotification(`Sản phẩm "${updatedProduct.title}" đã được cập nhật.`);
+      addNotification(`Product "${updatedProduct.title}" had update.`);
     }
   };
 
@@ -50,12 +51,10 @@ const AllProducts = () => {
 
   return (
     <div className="p-6">
-      {/* Title */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800">📦 Product List</h2>
       </div>
 
-      {/* Table */}
       <div className="w-full overflow-x-auto bg-white rounded-xl shadow-lg border border-gray-200">
         <table className="min-w-[900px] w-full border-collapse">
           <thead>
@@ -72,7 +71,7 @@ const AllProducts = () => {
             {Array.isArray(products) && products.length > 0 ? (
               products.map((product) => (
                 <tr key={product._id} className="hover:bg-gray-50 transition">
-                  {/* Image */}
+                  {/* ------------------------- Image ---------------------------------------*/}
                   <td className="px-5 py-4 border-b">
                     <div className="w-20 h-20 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                       <img
@@ -82,37 +81,38 @@ const AllProducts = () => {
                     </div>
                   </td>
 
-                  {/* Product Name */}
+                  {/* -----------------------Product Name --------------------------------*/}
                   <td className="px-5 py-4 border-b max-w-[360px] font-medium break-words">
                     {product.title}
                   </td>
 
-                  {/* Category */}
+                  {/*------------------------ Category ----------------------------------*/}
                   <td className="px-5 py-4 border-b">
                     <span
-                      className={`px-3 py-1 rounded-full whitespace-nowrap text-xs font-semibold ${product.category === "men's clothing"
+                      className={`px-3 py-1 rounded-full whitespace-nowrap text-xs font-semibold ${
+                        product.category === "men's clothing"
                           ? "bg-green-100 text-green-700"
                           : product.category === "jewelery"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : product.category === "electronics"
-                              ? "bg-purple-100 text-purple-700"
-                              : product.category === "women's clothing"
-                                ? "bg-pink-100 text-pink-700"
-                                : "bg-gray-100 text-gray-700"
-                        }`}
+                          ? "bg-yellow-100 text-yellow-700"
+                          : product.category === "electronics"
+                          ? "bg-purple-100 text-purple-700"
+                          : product.category === "women's clothing"
+                          ? "bg-pink-100 text-pink-700"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {product.category}
                     </span>
                   </td>
 
-                  {/* Price */}
+                  {/*------------------------- Price ---------------------------------*/}
                   <td className="px-5 py-4 border-b text-right">
                     <span className="font-semibold text-green-600">
-                      ${product.price}
+                      {product.price} VND
                     </span>
                   </td>
 
-                  {/* Operate */}
+                  {/*----------------------- Operate ------------------------------------*/}
                   <td className="px-5 py-4 border-b text-center">
                     <div className="flex items-center justify-center gap-3">
                       <button
@@ -136,7 +136,7 @@ const AllProducts = () => {
             ) : (
               <tr>
                 <td colSpan="6" className="text-center text-gray-500 py-8">
-                  🚫 Không có sản phẩm nào.
+                  🚫 No products yet.
                 </td>
               </tr>
             )}
@@ -144,20 +144,16 @@ const AllProducts = () => {
         </table>
       </div>
 
-      {/* Modal View Product */}
+      {/*---------------------- Modal View Product -------------------------*/}
       {selectedProduct && (
         <ProductItemView
           product={selectedProduct}
           onClose={handleCloseModal}
           onSave={handleSaveProduct}
-          // The line below calls removeProduct directly, which is redundant 
-          // because the product view typically handles updates, not deletions.
-          // I commented it out assuming the deletion is only handled by the main table button/modal.
-          //onDelete={() => removeProduct(selectedProduct._id)} 
         />
       )}
 
-      {/* Modal Delete */}
+      {/*-------------------- Modal Delete -------------------------------*/}
       {deleteTarget && (
         <DeleteModel
           message="Are you sure you want to delete this product?"
