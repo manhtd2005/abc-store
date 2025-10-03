@@ -3,7 +3,7 @@ import AuthView from "../components/AuthView";
 import { UserContext } from "../contexts/UserContext";
 import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
-import { addNotification } from "../services/notificationHelper";
+import { addNotification } from "../contexts/NotificationContext.jsx";
 
 export default function AllAuth() {
   const { users, deleteUser, updateUser } = useContext(UserContext);

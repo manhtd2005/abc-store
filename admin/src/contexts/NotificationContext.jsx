@@ -1,11 +1,13 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-const NotificationContext = createContext();
+// eslint-disable-next-line react-refresh/only-export-components
+export const NotificationContext = createContext();
 
-export const NotificationProvider = ({ children }) => {
+const NotificationProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
 
+    // Load từ cookies khi mount
     useEffect(() => {
         const stored = Cookies.get("notifications");
         if (stored) {
@@ -13,26 +15,33 @@ export const NotificationProvider = ({ children }) => {
         }
     }, []);
 
+    // Mỗi khi notifications thay đổi thì lưu lại vào cookies (chỉ giữ 20 cái mới nhất)
     useEffect(() => {
         const latestNotifications = notifications.slice(0, 20);
         Cookies.set("notifications", JSON.stringify(latestNotifications));
     }, [notifications]);
 
+    // Thêm thông báo mới
     const addNotification = (message) => {
         const newNotification = {
-            id: new Date().getTime(),
+            id: Date.now(),
             message,
-            time: new Date().toLocaleTimeString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-            }),
             read: false,
+            time: new Date().toLocaleString(),
         };
-        setNotifications((prev) => [newNotification, ...prev]);
+
+        setNotifications((prev) => [newNotification, ...prev].slice(0, 20));
     };
 
+    // Đánh dấu tất cả đã đọc
     const markAllRead = () => {
         const updated = notifications.map((n) => ({ ...n, read: true }));
+        setNotifications(updated);
+    };
+
+    // Xoá 1 thông báo theo id
+    const deleteNotification = (id) => {
+        const updated = notifications.filter((n) => n.id !== id);
         setNotifications(updated);
     };
 
@@ -43,6 +52,7 @@ export const NotificationProvider = ({ children }) => {
         addNotification,
         markAllRead,
         unreadCount,
+        deleteNotification
     };
 
     return (
@@ -52,6 +62,4 @@ export const NotificationProvider = ({ children }) => {
     );
 };
 
-export const useNotification = () => {
-    return useContext(NotificationContext);
-};
+export default NotificationProvider;

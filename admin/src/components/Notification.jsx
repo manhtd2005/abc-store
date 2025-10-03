@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getNotifications, markAsRead, deleteNotification } from "../services/notificationHelper";
+import { getNotifications, markAsRead, deleteNotification } from "../contexts/NotificationContext.jsx";
 
 const Notification = ({ setUnreadCount }) => {
   const [notifications, setNotifications] = useState([]);

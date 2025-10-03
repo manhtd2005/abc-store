@@ -3,7 +3,7 @@ import { ProductContext } from "../contexts/ProductContext";
 import ProductItemView from "../components/ProductItemView";
 import DeleteModel from "../components/DeleteModel";
 import { toast } from "react-toastify";
-import { addNotification } from "../services/notificationHelper";
+import { addNotification } from "../contexts/NotificationContext.jsx";
 
 const AllProducts = () => {
   const { products, loading, removeProduct, updateProduct } =
