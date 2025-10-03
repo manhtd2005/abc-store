@@ -1,6 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import Newletterbox from "../components/common/Newletterbox";
+import { toast } from "react-toastify"; // thêm dòng này
+import validateEmail from "../utils/validateEmail";
 
 const Contact = () => {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      toast.error("⚠️ Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+    if (!validateEmail(form.email)) {
+      toast.error("⚠️ Email không hợp lệ!");
+      return;
+    }
+
+    toast.success("🎉 Gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm.");
+    setForm({ name: "", email: "", message: "" }); // clear form
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
@@ -16,7 +40,7 @@ const Contact = () => {
         <div className="flex flex-col md:flex-row items-start gap-8">
           {/* Form */}
           <div className="bg-white rounded-2xl shadow-lg p-6 w-full md:w-1/2">
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-gray-700 font-medium mb-1">
                   Your Name
@@ -24,6 +48,10 @@ const Contact = () => {
                 <input
                   type="text"
                   placeholder="Enter your name"
+                  value={form.name}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
@@ -34,6 +62,10 @@ const Contact = () => {
                 <input
                   type="email"
                   placeholder="Enter your email"
+                  value={form.email}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, email: e.target.value }))
+                  }
                   className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-400"
                 />
               </div>
@@ -44,6 +76,10 @@ const Contact = () => {
                 <textarea
                   rows="4"
                   placeholder="Write your message..."
+                  value={form.message}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, message: e.target.value }))
+                  }
                   className="w-full resize-none px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-400"
                 ></textarea>
               </div>
@@ -55,7 +91,7 @@ const Contact = () => {
               </button>
             </form>
 
-            {/* Contact Info dưới form */}
+            {/* Contact Info */}
             <div className="mt-8 space-y-2 text-gray-700">
               <p>
                 <strong>Email:</strong> support@fashionshop.com
@@ -80,10 +116,7 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 text-center py-6 mt-10">
-        <p>&copy; 2025 Fashion Shop. All rights reserved.</p>
-      </footer>
+      <Newletterbox />
     </div>
   );
 };

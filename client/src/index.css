@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+* {
+  -webkit-user-select: none; /* Chrome, Safari, new Edge */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  user-select: none; /* chuẩn */
+}
+
 a.active {
   display: block;
   color: rgb(32, 32, 141);

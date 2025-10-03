@@ -1,10 +1,17 @@
-import { useState, useEffect, createContext, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useCallback,
+  useContext,
+} from "react";
 import {
   addToCartApi,
   getCartApi,
   removeFromCartApi,
   updateCartApi,
 } from "../services/cartService";
+import { AuthContext } from "./AuthContext";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext();
@@ -13,6 +20,7 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
 
   // Lấy giỏ hàng khi component mount
   const fetchCart = useCallback(async () => {
@@ -28,6 +36,15 @@ export const CartProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
+
+  // gọi fetchCart khi mount hoặc khi user thay đổi (login/logout)
+  useEffect(() => {
+    if (user) {
+      fetchCart();
+    } else {
+      setCart([]);
+    }
+  }, [user, fetchCart]);
 
   // Thêm sản phẩm vào giỏ hàng
   const addToCart = async (productId, quantity = 1) => {

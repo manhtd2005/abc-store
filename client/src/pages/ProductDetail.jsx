@@ -6,6 +6,7 @@ import { CartContext } from "../contexts/CartContext";
 import { AuthContext } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import ModalQuestion from "../components/common/ModalQuestion";
+import ProductRelated from "../components/common/ProductRelated";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -55,8 +56,8 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+    <div className=" mx-auto p-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-10">
         <div className="flex justify-center items-center">
           {product.image ? (
             <img
@@ -146,6 +147,8 @@ const ProductDetail = () => {
           onNo={() => setShowModal(false)}
         />
       )}
+
+      <ProductRelated />
     </div>
   );
 };

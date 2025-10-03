@@ -1,4 +1,5 @@
 import React from "react";
+import Newletterbox from "../components/common/Newletterbox";
 
 const About = () => {
   return (
@@ -24,7 +25,8 @@ const About = () => {
             <p>
               Welcome to <strong>Fashion Shop</strong>, your number one source
               for trendy and stylish clothing. We're dedicated to giving you the
-              very best outfits, with a focus on quality, design, and uniqueness.
+              very best outfits, with a focus on quality, design, and
+              uniqueness.
             </p>
             <p>
               Founded in 2020, our shop has come a long way from its beginnings
@@ -35,10 +37,7 @@ const About = () => {
             <p>
               We hope you enjoy our collections as much as we enjoy offering
               them to you. If you have any questions, feel free to{" "}
-              <a
-                href="#"
-                className="text-blue-600 hover:underline font-medium"
-              >
+              <a href="#" className="text-blue-600 hover:underline font-medium">
                 contact us
               </a>
               .
@@ -88,10 +87,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 text-center py-6 mt-10">
-        <p>&copy; 2025 Fashion Shop. All rights reserved.</p>
-      </footer>
+      <Newletterbox />
     </div>
   );
 };

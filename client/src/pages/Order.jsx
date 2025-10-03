@@ -64,7 +64,7 @@ const Order = () => {
             </h3>
             <p>
               <span className="font-medium">Fullname: </span>
-              {user.name?.firstname} {user.name?.lastname}
+              {user?.name?.firstname} {user?.name?.lastname}
             </p>
             <p>
               <span className="font-medium">Email: </span>
@@ -77,10 +77,10 @@ const Order = () => {
             <p>
               <span className="font-medium">Address: </span>
               {[
-                user.address?.number,
-                user.address?.street,
-                user.address?.city,
-                user.address?.zipcode,
+                user?.address?.number,
+                user?.address?.street,
+                user?.address?.city,
+                user?.address?.zipcode,
               ]
                 .filter(Boolean)
                 .join(", ")}
@@ -103,7 +103,7 @@ const Order = () => {
             {cartItems.map((item, idx) => (
               <div
                 key={idx}
-                className="grid items-center grid-cols-[0.5fr_2.5fr_0.5fr] gap-4 border-b pb-2 last:border-b-0 last:pb-0"
+                className="grid items-center grid-cols-[0.5fr_2.5fr_1fr] gap-4 border-b pb-2 last:border-b-0 last:pb-0"
               >
                 <img
                   src={item.image}

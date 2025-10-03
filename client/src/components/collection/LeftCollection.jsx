@@ -4,7 +4,7 @@ const LeftCollection = () => {
   return (
     <aside className="w-full lg:w-72">
       <div className="bg-white rounded-2xl shadow p-6 space-y-8">
-        {/* Category Filter */}
+        {/* ------------------------- Category Filter ---------------------------- */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Category</h3>
           <ul className="space-y-3 text-gray-700">
@@ -47,7 +47,7 @@ const LeftCollection = () => {
           </ul>
         </div>
 
-        {/* Price Filter */}
+        {/* -------------------------- Price Filter ------------------------- */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Price</h3>
           <ul className="space-y-3 text-gray-700">
@@ -114,7 +114,7 @@ const LeftCollection = () => {
           </ul>
         </div>
 
-        {/* Rating Filter */}
+        {/* --------------------------- Rating Filter -------------------------- */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Rating</h3>
           <ul className="space-y-3 text-gray-700">
@@ -171,7 +171,7 @@ const LeftCollection = () => {
           </ul>
         </div>
 
-        {/* Reset Filters Button */}
+        {/* ------------------------------ Reset Filters Button ------------------------ */}
         <div>
           <button className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300">
             Reset Filters
