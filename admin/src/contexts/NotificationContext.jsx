@@ -44,7 +44,7 @@ const NotificationProvider = ({ children }) => {
       try {
         setNotifications(JSON.parse(stored));
       } catch (err) {
-        console.error("Không parse được notifications:", err);
+        console.error("Not parse for notifications:", err);
       }
     }
   }, []);

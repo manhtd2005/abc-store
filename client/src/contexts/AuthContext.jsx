@@ -42,12 +42,12 @@ export const AuthProvider = ({ children }) => {
         setUser(u.user);
         console.log(u.user);
 
-        return { success: true, message: "Đăng nhập thành công" };
+        return { success: true, message: "Login success" };
       }
-      return { success: false, message: res.message || "Đăng nhập thất bại" };
+      return { success: false, message: res.message || "Login error" };
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Có lỗi khi đăng nhập" };
+      return { success: false, message: error.message };
     }
   };
 
@@ -56,12 +56,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await signinApi({ username, email, password });
       if (res && res.success) {
-        return { success: true, message: "Đăng ký thành công" };
+        return { success: true, message: "Signin success" };
       }
-      return { success: false, message: res.message || "Đăng ký thất bại" };
+      return { success: false, message: res.message || "Signin error" };
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Có lỗi khi đăng ký" };
+      return { success: false, message: error.message };
     }
   };
 
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
       return res;
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Có lỗi khi lấy user" };
+      return { success: false, message: "Error fetch user by id" };
     }
   };
 
@@ -85,7 +85,7 @@ export const AuthProvider = ({ children }) => {
       return res;
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Có lỗi khi cập nhật user" };
+      return { success: false, message: "Error updated user" };
     }
   };
 
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
       return res;
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Có lỗi khi đổi mật khẩu" };
+      return { success: false, message: "Error change password" };
     }
   };
 

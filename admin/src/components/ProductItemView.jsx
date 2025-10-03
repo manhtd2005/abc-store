@@ -36,7 +36,7 @@ const ProductItemView = ({ product, onClose, onSave, onDelete }) => {
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
       <div className="relative bg-white w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-hidden">
-        {/* Nút X đóng modal */}
+        {/*------------------ Nút X đóng modal -------------------------*/}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 transition cursor-pointer"
@@ -45,7 +45,7 @@ const ProductItemView = ({ product, onClose, onSave, onDelete }) => {
         </button>
 
         <div className="grid grid-cols-[1fr_2fr] h-full">
-          {/* Left: Image */}
+          {/*------------------- Image ----------------------*/}
           <div className="bg-gray-100 flex flex-col items-center justify-center p-6">
             <img
               src={formData.image}
@@ -62,7 +62,6 @@ const ProductItemView = ({ product, onClose, onSave, onDelete }) => {
             )}
           </div>
 
-          {/* Right: Info */}
           <div className="p-6 flex flex-col justify-between">
             <div className="space-y-3 mt-7">
               {isEditing ? (
@@ -110,7 +109,7 @@ const ProductItemView = ({ product, onClose, onSave, onDelete }) => {
                     {formData.title}
                   </h2>
                   <p className="text-lg text-gray-700 font-semibold">
-                    ${formData.price}
+                    {formData.price} VND
                   </p>
                   <p className="text-sm text-gray-600">
                     {formData.description}

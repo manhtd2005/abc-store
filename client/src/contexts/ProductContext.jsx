@@ -7,6 +7,7 @@ export const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   // State toàn cục
   const [products, setProducts] = useState([]);
+  const [filterProducts, setFilterProducts] = useState({});
 
   // Lấy danh sách tất cả sản phẩm
   const fetchProducts = useCallback(async () => {
@@ -32,10 +33,6 @@ export const ProductProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
   // Find product by name
   const searchProducts = (keyword) => {
     if (!keyword.trim()) return products;
@@ -59,6 +56,10 @@ export const ProductProvider = ({ children }) => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   const value = {
     products,

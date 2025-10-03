@@ -13,16 +13,16 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      toast.error("⚠️ Vui lòng điền đầy đủ thông tin!");
+      toast.error("⚠️ Please enter all information!");
       return;
     }
     if (!validateEmail(form.email)) {
-      toast.error("⚠️ Email không hợp lệ!");
+      toast.error("⚠️ Email is invalid");
       return;
     }
 
-    toast.success("🎉 Gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm.");
-    setForm({ name: "", email: "", message: "" }); // clear form
+    toast.success("🎉 Success to send message");
+    setForm({ name: "", email: "", message: "" });
   };
 
   return (

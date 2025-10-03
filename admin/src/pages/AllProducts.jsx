@@ -36,7 +36,7 @@ const AllProducts = () => {
       removeProduct(deleteTarget._id);
       setDeleteTarget(null);
       toast.success("Product removed successfully");
-      addNotification(`Sản phẩm "${deleteTarget.title}" đã bị xoá.`);
+      addNotification(`Product "${deleteTarget.title}" had delete.`);
     }
   };
 

@@ -23,9 +23,9 @@ const Auth = () => {
 
     // kiểm tra lỗi trước
     let newErrors = {};
-    if (!username) newErrors.username = "Vui lòng nhập username";
-    if (!password) newErrors.password = "Vui lòng nhập password";
-    if (!isLogin && !email) newErrors.email = "Vui lòng nhập email";
+    if (!username) newErrors.username = "Please enter username";
+    if (!password) newErrors.password = "Please enter password";
+    if (!isLogin && !email) newErrors.email = "Please enter email";
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
@@ -38,7 +38,7 @@ const Auth = () => {
         toast.success("Login success");
       } else {
         // hiển thị lỗi tổng quát
-        setErrors({ form: res?.message || "Đăng nhập thất bại" });
+        setErrors({ form: res?.message || "Error login" });
       }
     } else {
       // Đăng ký
@@ -46,7 +46,7 @@ const Auth = () => {
       if (res?.success) {
         setShowSuccessModal(true);
       } else {
-        setErrors({ form: res?.message || "Đăng ký thất bại" });
+        setErrors({ form: res?.message || "Eror signin" });
       }
     }
   };
@@ -157,7 +157,7 @@ const Auth = () => {
       {/* -------------------------Modal Success-------------------------- */}
       {showSuccessModal && (
         <ModalSuccess
-          message="Đăng ký thành công! Nhấn OK để đăng nhập."
+          message="Signin success! Please OK to login."
           onClose={() => {
             setIsLogin(true);
             setShowSuccessModal(false);

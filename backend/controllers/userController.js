@@ -292,6 +292,14 @@ const changePassword = async (req, res) => {
       return res.json({ success: false, message: "Old password is incorrect" });
     }
 
+    const isSame = await bcrypt.compare(newPassword, user.password);
+    if (isSame) {
+      return res.json({
+        success: false,
+        message: "New password must be different from old password",
+      });
+    }
+
     //  Kiểm tra độ dài mật khẩu mới
     if (newPassword.length < 8) {
       return res.json({

@@ -58,7 +58,7 @@ const LeftCollection = () => {
                   name="price"
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">$0 - $100</span>
+                <span className="text-base">0 - 10000VND</span>
               </label>
             </li>
             <li>
@@ -68,7 +68,7 @@ const LeftCollection = () => {
                   name="price"
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">$100 - $200</span>
+                <span className="text-base">10000 - 20000VND</span>
               </label>
             </li>
             <li>
@@ -78,7 +78,7 @@ const LeftCollection = () => {
                   name="price"
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">$200 - $300</span>
+                <span className="text-base">20000 - 30000VND</span>
               </label>
             </li>
             <li>
@@ -88,7 +88,7 @@ const LeftCollection = () => {
                   name="price"
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">$300 - $400</span>
+                <span className="text-base">30000 - 40000VND</span>
               </label>
             </li>
             <li>
@@ -98,7 +98,7 @@ const LeftCollection = () => {
                   name="price"
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">$400 - $500</span>
+                <span className="text-base">40000 - 50000VND</span>
               </label>
             </li>
             <li>
@@ -108,7 +108,7 @@ const LeftCollection = () => {
                   name="price"
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">$500+</span>
+                <span className="text-base">50000VND+</span>
               </label>
             </li>
           </ul>
