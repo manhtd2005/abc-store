@@ -107,7 +107,7 @@ const ProductDetail = () => {
           </div>
 
           <p className="text-4xl font-semibold text-green-600 mb-4 transition-colors duration-300 hover:text-green-700 cursor-default">
-            ${product.price}
+            {product.price.toLocaleString()} VND
           </p>
 
           <div className="flex items-center mb-4">

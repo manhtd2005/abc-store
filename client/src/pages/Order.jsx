@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CreditCard, Edit, Smartphone, Truck } from "lucide-react";
+import { Edit, QrCode, ScanQrCode, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../contexts/CartContext";
 import { AuthContext } from "../contexts/AuthContext";
@@ -25,16 +25,27 @@ const Order = () => {
   }, [cartItems, recalcTotal]);
 
   const paymentMethods = [
-    { name: "COD", icon: <Truck size={20} /> },
-    { name: "MOMO", icon: <Smartphone size={20} /> },
-    { name: "VISA", icon: <CreditCard size={20} /> },
+    {
+      name: "COD",
+      icon: <Truck size={20} />,
+      activeColor: "bg-green-500 text-white border-green-500",
+    },
+    {
+      name: "MB Bank",
+      icon: <QrCode size={20} />,
+      activeColor: "bg-blue-500 text-white border-blue-500",
+    },
+    {
+      name: "Techcombank",
+      icon: <ScanQrCode size={20} />,
+      activeColor: "bg-red-500 text-white border-red-500",
+    },
   ];
 
   return (
     <div className="mb-30 mx-auto p-6 bg-gray-50 rounded-lg shadow-lg space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">Order Summary</h2>
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Left Column */}
         <div className="space-y-6">
           {/* Payment Method */}
           <div className="bg-white p-4 rounded-lg shadow-sm">
@@ -42,13 +53,13 @@ const Order = () => {
             <div className="flex gap-4">
               {paymentMethods.map((method) => (
                 <button
+                  onClick={() => setActivePayment(method.name)}
                   key={method.name}
                   className={`flex items-center gap-2 px-3 py-2 border rounded transition ${
                     activePayment === method.name
-                      ? "bg-blue-500 text-white border-blue-500"
+                      ? method.activeColor
                       : "hover:bg-gray-100"
                   }`}
-                  onClick={() => setActivePayment(method.name)}
                 >
                   {method.icon}
                   <span>{method.name}</span>
@@ -122,7 +133,7 @@ const Order = () => {
           </div>
 
           <div className="text-right font-bold text-lg mt-2">
-            Total: {total} VND
+            Total: {total.toLocaleString()} VND
           </div>
 
           <button className="w-full mt-3 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">

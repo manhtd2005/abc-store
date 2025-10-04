@@ -69,7 +69,9 @@ const SearchBar = ({ onSelectProduct }) => {
                   {product.category}
                 </p>
               </div>
-              <b className="text-blue-600 text-xl">{product.price}$</b>
+              <b className="text-blue-600 text-xl">
+                {product.price.toLocaleString()} VND
+              </b>
             </Link>
           ))}
         </div>

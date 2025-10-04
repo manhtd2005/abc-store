@@ -50,7 +50,7 @@ const Cart = () => {
             key={`${item.productId}-${idx}`}
             className="grid grid-cols-[0.5fr_2.5fr_1fr_1fr_0.5fr] gap-5 items-center border-b py-3 hover:bg-gray-50 transition"
           >
-            {/* Image */}
+            {/*------------------------ Image ---------------------------*/}
             <div>
               <img
                 src={item.image}
@@ -59,7 +59,7 @@ const Cart = () => {
               />
             </div>
 
-            {/* Name + Category */}
+            {/*------------------------ Name + Category ------------------------*/}
             <div className="flex flex-col gap-1 overflow-hidden">
               <span className="font-medium text-gray-800 truncate">
                 {item.title}
@@ -73,10 +73,12 @@ const Cart = () => {
               </span>
             </div>
 
-            {/* Price */}
-            <div className="font-semibold text-blue-600">{item.price} VND</div>
+            {/*------------------------ Price ------------------------*/}
+            <div className="font-semibold text-blue-600">
+              {item.price.toLocaleString()} VND
+            </div>
 
-            {/* Quantity */}
+            {/*------------------------ Quantity ------------------------*/}
             <div className="flex items-center gap-2">
               <button
                 className="p-1 border rounded transition bg-red-500"
@@ -95,7 +97,7 @@ const Cart = () => {
               </button>
             </div>
 
-            {/* Remove */}
+            {/*------------------------ Remove ------------------------*/}
             <div>
               <button
                 className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition flex items-center gap-1"
@@ -107,10 +109,12 @@ const Cart = () => {
           </div>
         ))}
 
-        {/* Total + Checkout */}
+        {/*------------------------ Total + Checkout ------------------------*/}
         <div className="flex justify-end mt-4">
           <div className="text-right">
-            <p className="text-lg font-medium">Total: {total} VND</p>
+            <p className="text-lg font-medium">
+              Total: {total.toLocaleString()} VND
+            </p>
             <button
               onClick={() => {
                 if (total <= 0) {

@@ -1,5 +1,6 @@
 import { createContext, useState, useCallback, useEffect } from "react";
 import { getProductById, getProducts } from "../services/productsService";
+import shuffleArray from "../utils/shuffleArray";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const ProductContext = createContext();
@@ -7,17 +8,25 @@ export const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   // State toàn cục
   const [products, setProducts] = useState([]);
-  const [filterProducts, setFilterProducts] = useState({});
+  const [filterProducts, setFilterProducts] = useState({
+    category: [],
+    price: "",
+    rating: "",
+    sort: "",
+  });
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   // Lấy danh sách tất cả sản phẩm
   const fetchProducts = useCallback(async () => {
     try {
       const data = await getProducts();
       setProducts(
-        data.map((p) => ({
-          ...p,
-          id: p._id || p.id,
-        }))
+        shuffleArray(
+          data.map((p) => ({
+            ...p,
+            id: p._id || p.id,
+          }))
+        )
       );
     } catch (error) {
       console.log("Error fetching products:", error);
@@ -57,6 +66,11 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
+  // Reset filter
+  const resetFilter = () => {
+    setFilterProducts({ category: [], price: "", rating: "", sort: "" });
+  };
+
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -68,6 +82,7 @@ export const ProductProvider = ({ children }) => {
     fetchProductById,
     searchProducts,
     getCategoryColor,
+    resetFilter,
   };
 
   return (

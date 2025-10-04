@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export default function AllOrders() {
   const [orders, setOrders] = useState([]);
@@ -149,8 +148,6 @@ export default function AllOrders() {
           </tbody>
         </table>
       </div>
-
-      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 }

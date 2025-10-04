@@ -60,7 +60,7 @@ const ProductItem = ({ product }) => {
 
         {/* ------------------------------Price------------------------------ */}
         <div className="mt-2 text-xl font-bold text-amber-600 transition-colors duration-300 group-hover:text-amber-700">
-          ${product.price}
+          {product.price.toLocaleString()} VND
         </div>
       </div>
     </Link>
