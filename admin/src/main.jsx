@@ -6,6 +6,7 @@ import ProductProvider from "./contexts/ProductContext.jsx";
 import AuthAdminProvider from "./contexts/AuthAdminContext.jsx";
 import { UserProvider } from "./contexts/UserContext.jsx";
 import NotificationProvider from "./contexts/NotificationContext.jsx";
+import { OrderProvider } from "./contexts/OrderContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")).render(
       <AuthAdminProvider>
         <UserProvider>
           <ProductProvider>
-            <App />
+            <OrderProvider>
+              <App />
+            </OrderProvider>
           </ProductProvider>
         </UserProvider>
       </AuthAdminProvider>

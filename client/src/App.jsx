@@ -15,6 +15,9 @@ import "react-toastify/dist/ReactToastify.css";
 import ChangePassword from "./pages/ChangePassword";
 import MainUserLayout from "./pages/MainUserLayout";
 import Order from "./pages/Order";
+import Verify from "./pages/Verify";
+import SuccessPayment from "./pages/SuccessPayment";
+import UserOrders from "./pages/UserOrders";
 
 const App = () => {
   return (
@@ -33,8 +36,11 @@ const App = () => {
           <Route element={<MainUserLayout />}>
             <Route path="/information" element={<Information />} />
             <Route path="/change-password" element={<ChangePassword />} />
+            <Route path="/user-orders" element={<UserOrders />} />
           </Route>
           <Route path="/order" element={<Order />} />
+          <Route path="/verify" element={<Verify />} />
+          <Route path="/successpayment" element={<SuccessPayment />} />
         </Routes>
       </div>
       <Footer />

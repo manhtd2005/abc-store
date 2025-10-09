@@ -49,7 +49,8 @@ export const CartProvider = ({ children }) => {
   // Thêm sản phẩm vào giỏ hàng
   const addToCart = async (productId, quantity = 1) => {
     try {
-      const res = await addToCartApi(productId, quantity);
+      const pid = productId?._id || productId?.id || productId;
+      const res = await addToCartApi(pid, quantity);
       if (res.success) {
         setCart(res.cartData || []);
       }
@@ -61,7 +62,8 @@ export const CartProvider = ({ children }) => {
   // Cập nhật số lượng sản phẩm
   const updateCart = async (productId, quantity) => {
     try {
-      const res = await updateCartApi(productId, quantity);
+      const pid = productId?._id || productId?.id || productId;
+      const res = await updateCartApi(pid, quantity);
       if (res.success) {
         setCart(res.cartData || []);
       }
@@ -73,7 +75,8 @@ export const CartProvider = ({ children }) => {
   // Xoá sản phẩm khỏi giỏ
   const removeFromCart = async (productId) => {
     try {
-      const res = await removeFromCartApi(productId);
+      const pid = productId?._id || productId?.id || productId;
+      const res = await removeFromCartApi(pid);
       if (res.success) {
         setCart(res.cartData || []);
       }

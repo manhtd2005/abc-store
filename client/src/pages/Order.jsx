@@ -3,21 +3,23 @@ import { Edit, QrCode, ScanQrCode, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../contexts/CartContext";
 import { AuthContext } from "../contexts/AuthContext";
+import { OrderContext } from "../contexts/OrderContext";
 
 const Order = () => {
   const navigate = useNavigate();
   const { cart, total, recalcTotal } = useContext(CartContext);
   const { user } = useContext(AuthContext);
+  const { placeOrder } = useContext(OrderContext);
   const [activePayment, setActivePayment] = useState("COD");
+  const [loading, setLoading] = useState(false);
 
-  // Ghép thông tin sản phẩm vào cartItem
-  const cartItems = cart.map((item) => ({
-    productId: item.productId?._id,
-    title: item.productId?.title || "Unknown",
+  const cartItems = (cart || []).map((item) => ({
+    productId: item.productId?._id || item.productId,
+    title: item.productId?.title || item.title || "Unknown",
     quantity: item?.quantity || 1,
-    category: item.productId?.category || "Unknown",
-    price: item.productId?.price || 0,
-    image: item.productId?.image || "/placeholder.png",
+    category: item.productId?.category || item.category || "Unknown",
+    price: item.productId?.price || item.price || 0,
+    image: item.productId?.image || item.image || "/placeholder.png",
   }));
 
   useEffect(() => {
@@ -42,12 +44,82 @@ const Order = () => {
     },
   ];
 
+  const buildOrderPayload = () => {
+    const items = cartItems.map((it) => ({
+      product: it.productId,
+      quantity: it.quantity,
+      unitPrice: it.price,
+    }));
+    const contact = {
+      email: user?.email || "",
+      fullname: (
+        (user?.name?.firstname || "") +
+        " " +
+        (user?.name?.lastname || "")
+      ).trim(),
+      address: [
+        user?.address?.number,
+        user?.address?.street,
+        user?.address?.city,
+        user?.address?.zipcode,
+      ]
+        .filter(Boolean)
+        .join(", "),
+      phone: user?.phone || "",
+    };
+    return { userId: user?._id || user?.id, items, contact, total };
+  };
+
+  const onPayClick = async () => {
+    if (!user) return navigate("/login");
+    if (!cartItems || cartItems.length === 0) {
+      alert("Giỏ hàng trống");
+      return;
+    }
+
+    const payload = buildOrderPayload();
+
+    try {
+      setLoading(true);
+
+      if (activePayment === "COD") {
+        const res = await placeOrder({ method: "COD", ...payload });
+        if (res?.success) {
+          navigate("/successpayment", {
+            state: {
+              bankName: "COD",
+              accountNumber: "-",
+              fullName: payload.contact.fullname,
+              amount: total,
+              confirmCode: res.order?._id || res.order?.id || "ORDER_OK",
+            },
+          });
+        } else {
+          alert(res?.message || "Order failed");
+        }
+      } else {
+        // go to verify page for bank transfer flow
+        const bankKey = activePayment === "MB Bank" ? "MBBank" : "Techcombank";
+        navigate("/verify", {
+          state: {
+            method: bankKey,
+            payload,
+          },
+        });
+      }
+    } catch (err) {
+      console.error("Place order error:", err);
+      alert(err?.message || "Lỗi khi đặt hàng");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="mb-30 mx-auto p-6 bg-gray-50 rounded-lg shadow-lg space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">Order Summary</h2>
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-6">
-          {/* Payment Method */}
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="font-semibold text-gray-700 mb-2">Payment Method</h3>
             <div className="flex gap-4">
@@ -68,7 +140,6 @@ const Order = () => {
             </div>
           </div>
 
-          {/* Customer Information */}
           <div className="bg-white p-4 rounded-lg shadow-sm space-y-1 relative">
             <h3 className="font-semibold text-gray-700 mb-2">
               Customer Information
@@ -107,7 +178,6 @@ const Order = () => {
           </div>
         </div>
 
-        {/* Right Column */}
         <div className="bg-white p-4 rounded-lg shadow-sm space-y-4">
           <h3 className="font-semibold text-gray-700 mb-2">Your Order</h3>
           <div className="space-y-3">
@@ -136,8 +206,12 @@ const Order = () => {
             Total: {total.toLocaleString()} VND
           </div>
 
-          <button className="w-full mt-3 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">
-            Payment
+          <button
+            onClick={onPayClick}
+            disabled={loading}
+            className="w-full mt-3 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition disabled:opacity-60"
+          >
+            {loading ? "Processing..." : "Payment"}
           </button>
         </div>
       </div>

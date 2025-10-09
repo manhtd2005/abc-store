@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from "react-router-dom";
-import { Lock, UserCircle } from "lucide-react";
+import { ListOrdered, Lock, UserCircle } from "lucide-react";
 
 const MainUserLayout = () => {
   return (
@@ -29,6 +29,18 @@ const MainUserLayout = () => {
           >
             <Lock size={20} />
             <span className="font-medium"> Password</span>
+          </NavLink>
+
+          <NavLink
+            to={`/user-orders`}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                isActive ? "bg-blue-50 text-blue-600" : "hover:bg-gray-100"
+              }`
+            }
+          >
+            <ListOrdered size={20} />
+            <span className="font-medium">Orders</span>
           </NavLink>
         </nav>
       </aside>
