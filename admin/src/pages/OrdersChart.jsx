@@ -38,7 +38,6 @@ const OrdersChart = () => {
     loading,
     error,
     getTotalOrders,
-    getOrdersByStatus,
     getOrdersByMonth,
     getRevenueByMonth,
     getAverageOrderValue,
@@ -50,13 +49,6 @@ const OrdersChart = () => {
     () => getAverageOrderValue() || 0,
     [getAverageOrderValue]
   );
-
-  // orders by status -> PieChart expects { name, value }
-  const statusData = useMemo(() => {
-    const d = getOrdersByStatus() || [];
-    if (!d.length) return [{ name: "No Data", value: 1 }];
-    return d.map((s) => ({ name: s.status || "unknown", value: s.value || 0 }));
-  }, [getOrdersByStatus]);
 
   // orders count by month -> LineChart expects { name, count }
   const ordersByMonth = useMemo(() => {
@@ -128,38 +120,9 @@ const OrdersChart = () => {
       </div>
 
       {/* charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Pie: orders by status */}
-        <div className="rounded-2xl border bg-white shadow-sm p-6">
-          <h4 className="text-lg font-semibold mb-3">Orders by Status</h4>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={statusData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={90}
-                label={({ name, percent }) =>
-                  `${name} ${(percent * 100).toFixed(0)}%`
-                }
-              >
-                {statusData.map((_, idx) => (
-                  <Cell
-                    key={`cell-status-${idx}`}
-                    fill={COLORS[idx % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip formatter={(v) => v} />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
+      <div>
         {/* Line: orders by month */}
-        <div className="rounded-2xl border bg-white shadow-sm p-6 lg:col-span-2">
+        <div className="rounded-2xl border bg-white shadow-sm p-6 lg:col-span-2 mb-10">
           <h4 className="text-lg font-semibold mb-3">Orders by Month</h4>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart

@@ -53,16 +53,6 @@ export const OrderProvider = ({ children }) => {
   // Total orders
   const getTotalOrders = useCallback(() => orders.length, [orders]);
 
-  // Orders by status -> [{ status, value }]
-  const getOrdersByStatus = useCallback(() => {
-    const map = orders.reduce((acc, o) => {
-      const s = (o?.status || "unknown").toString();
-      acc[s] = (acc[s] || 0) + 1;
-      return acc;
-    }, {});
-    return Object.keys(map).map((k) => ({ status: k, value: map[k] }));
-  }, [orders]);
-
   // Orders count grouped by month -> [{ month: 'YYYY-MM', count }]
   const getOrdersByMonth = useCallback(() => {
     const map = orders.reduce((acc, o) => {
@@ -146,7 +136,6 @@ export const OrderProvider = ({ children }) => {
     error,
     fetchAllOrders,
     getTotalOrders,
-    getOrdersByStatus,
     getOrdersByMonth,
     getRevenueByMonth,
     getAverageOrderValue,

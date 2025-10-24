@@ -112,7 +112,7 @@ const AccountsChart = () => {
         </div>
 
         {/* Line: registrations by month */}
-        <div className="rounded-2xl border bg-white shadow-sm p-6 lg:col-span-2">
+        <div className="rounded-2xl border bg-white shadow-sm p-6 lg:col-span-2 h-[500px]">
           <h4 className="text-lg font-semibold mb-3">Registrations by Month</h4>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart
