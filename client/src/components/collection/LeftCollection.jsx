@@ -1,168 +1,125 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ProductContext } from "../../contexts/ProductContext";
 
 const LeftCollection = () => {
+  const { filterProducts, toggleCategory, setPrice, setRating, resetFilter } =
+    useContext(ProductContext);
+
+  const categories = [
+    "men's clothing",
+    "women's clothing",
+    "jewelery",
+    "electronics",
+  ];
+
   return (
     <aside className="w-full lg:w-72">
       <div className="bg-white rounded-2xl shadow p-6 space-y-8">
-        {/* ------------------------- Category Filter ---------------------------- */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Category</h3>
           <ul className="space-y-3 text-gray-700">
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-gray-600 rounded-sm border-gray-300"
-                />
-                <span className="text-base">Men's clothing</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-gray-600 rounded-sm border-gray-300"
-                />
-                <span className="text-base">Women's clothing</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-gray-600 rounded-sm border-gray-300"
-                />
-                <span className="text-base">Jewelery</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-gray-600 rounded-sm border-gray-300"
-                />
-                <span className="text-base">Electronics</span>
-              </label>
-            </li>
+            {categories.map((c) => (
+              <li key={c}>
+                <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
+                  <input
+                    type="checkbox"
+                    checked={filterProducts.category.includes(c)}
+                    onChange={() => toggleCategory(c)}
+                    className="form-checkbox h-4 w-4 text-gray-600 rounded-sm border-gray-300"
+                  />
+                  <span className="text-base">{c}</span>
+                </label>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* -------------------------- Price Filter ------------------------- */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Price</h3>
           <ul className="space-y-3 text-gray-700">
             <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
+              <label className="inline-flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="price"
+                  checked={filterProducts.price === "0-10000"}
+                  onChange={() => setPrice("0-10000")}
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">0 - 10000VND</span>
+                <span className="text-base">0 - 10,000</span>
               </label>
             </li>
             <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
+              <label className="inline-flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="price"
+                  checked={filterProducts.price === "10000-20000"}
+                  onChange={() => setPrice("10000-20000")}
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">10000 - 20000VND</span>
+                <span className="text-base">10,000 - 20,000</span>
               </label>
             </li>
             <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
+              <label className="inline-flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="price"
+                  checked={filterProducts.price === "20000-30000"}
+                  onChange={() => setPrice("20000-30000")}
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">20000 - 30000VND</span>
+                <span className="text-base">20,000 - 30,000</span>
               </label>
             </li>
             <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
+              <label className="inline-flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="price"
+                  checked={filterProducts.price === "50000+"}
+                  onChange={() => setPrice("50000+")}
                   className="form-radio h-4 w-4 text-gray-600 border-gray-300"
                 />
-                <span className="text-base">30000 - 40000VND</span>
+                <span className="text-base">50,000+</span>
               </label>
             </li>
             <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
-                <input
-                  type="radio"
-                  name="price"
-                  className="form-radio h-4 w-4 text-gray-600 border-gray-300"
-                />
-                <span className="text-base">40000 - 50000VND</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 hover:text-gray-900">
-                <input
-                  type="radio"
-                  name="price"
-                  className="form-radio h-4 w-4 text-gray-600 border-gray-300"
-                />
-                <span className="text-base">50000VND+</span>
-              </label>
+              <button
+                onClick={() => setPrice("")}
+                className="mt-2 text-sm text-gray-600 underline"
+              >
+                Clear price
+              </button>
             </li>
           </ul>
         </div>
 
-        {/* --------------------------- Rating Filter -------------------------- */}
         <div>
           <h3 className="text-xl font-bold text-gray-800 mb-4">Rating</h3>
           <ul className="space-y-3 text-gray-700">
+            {[4, 3, 2, 1].map((r) => (
+              <li key={r}>
+                <label className="inline-flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="rating"
+                    checked={String(filterProducts.rating) === String(r)}
+                    onChange={() => setRating(String(r))}
+                    className="form-radio h-4 w-4 text-yellow-500 border-gray-300"
+                  />
+                  <span className="text-base">{r} ★ & up</span>
+                </label>
+              </li>
+            ))}
             <li>
               <label className="inline-flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="rating"
-                  className="form-radio h-4 w-4 text-yellow-500 border-gray-300"
-                />
-                <span className="text-base">1-2 ★</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
-                  className="form-radio h-4 w-4 text-yellow-500 border-gray-300"
-                />
-                <span className="text-base">2-3 ★</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
-                  className="form-radio h-4 w-4 text-yellow-500 border-gray-300"
-                />
-                <span className="text-base">3-4 ★</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
-                  className="form-radio h-4 w-4 text-yellow-500 border-gray-300"
-                />
-                <span className="text-base">4-5 ★</span>
-              </label>
-            </li>
-            <li>
-              <label className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="rating"
+                  checked={!filterProducts.rating}
+                  onChange={() => setRating("")}
                   className="form-radio h-4 w-4 text-yellow-500 border-gray-300"
                 />
                 <span className="text-base">All Ratings</span>
@@ -171,9 +128,11 @@ const LeftCollection = () => {
           </ul>
         </div>
 
-        {/* ------------------------------ Reset Filters Button ------------------------ */}
         <div>
-          <button className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300">
+          <button
+            onClick={resetFilter}
+            className="w-full bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-700 transition duration-300"
+          >
             Reset Filters
           </button>
         </div>

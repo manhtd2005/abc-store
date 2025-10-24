@@ -22,6 +22,7 @@
     "react-router-dom": "^7.9.1",
     "react-toastify": "^11.0.5",
     "reat": "^0.0.1-security",
+    "recharts": "^3.3.0",
     "router": "^2.2.0",
     "tailwindcss": "^4.1.13"
   },

@@ -7,6 +7,7 @@ import {
 import { useCallback } from "react";
 import { useEffect } from "react";
 
+// ...existing code...
 // eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext();
 
@@ -76,6 +77,63 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
+  // Thống kê phục vụ biểu đồ
+
+  // Tổng số user
+  const getTotalUsers = useCallback(() => {
+    return users.length;
+  }, [users]);
+
+  // Số user theo city -> trả về mảng phù hợp cho PieChart: [{ name: city, value: count }]
+  const getUsersByCity = useCallback(() => {
+    const map = users.reduce((acc, u) => {
+      const city = u?.address?.city || "Unknown";
+      acc[city] = (acc[city] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.keys(map).map((city) => ({ name: city, value: map[city] }));
+  }, [users]);
+
+  // Số đăng ký theo tháng -> trả về mảng sorted [{ month: 'YYYY-MM', count }]
+  const getRegistrationsByMonth = useCallback(() => {
+    const map = users.reduce((acc, u) => {
+      // cố gắng lấy trường ngày đăng ký từ nhiều nguồn
+      const dateStr =
+        u?.createdAt || u?.registered?.date || u?.registeredAt || u?.date;
+      if (!dateStr) return acc;
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return acc;
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}`;
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.keys(map)
+      .sort()
+      .map((month) => ({ month, count: map[month] }));
+  }, [users]);
+
+  // Top email domains -> trả về mảng [{ domain, count }]
+  const getTopEmailDomains = useCallback(
+    (limit = 10) => {
+      const map = users.reduce((acc, u) => {
+        const email = u?.email || "";
+        const parts = email.split("@");
+        if (parts.length !== 2) return acc;
+        const domain = parts[1].toLowerCase();
+        acc[domain] = (acc[domain] || 0) + 1;
+        return acc;
+      }, {});
+      return Object.keys(map)
+        .map((domain) => ({ domain, count: map[domain] }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, limit);
+    },
+    [users]
+  );
+
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
@@ -88,6 +146,10 @@ export const UserProvider = ({ children }) => {
         signinUser,
         fetchUsers,
         removeUser,
+        getTotalUsers,
+        getUsersByCity,
+        getRegistrationsByMonth,
+        getTopEmailDomains,
       }}
     >
       {children}

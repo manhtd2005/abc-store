@@ -42,7 +42,7 @@ const Header = ({ isModalOpen }) => {
           <nav className="hidden md:flex space-x-8">
             <NavLink
               to={"/allProducts"}
-              className="text-gray-700 hover:text-blue-600 transition font-bold"
+              className={`text-gray-700 hover:text-blue-600 transition font-bold`}
             >
               Products
             </NavLink>
@@ -57,6 +57,13 @@ const Header = ({ isModalOpen }) => {
               className="text-gray-700 hover:text-blue-600 transition font-bold"
             >
               Accounts
+            </NavLink>
+
+            <NavLink
+              to={"/productsChart"}
+              className="text-gray-700 hover:text-blue-600 transition font-bold"
+            >
+              Dashboard
             </NavLink>
           </nav>
 

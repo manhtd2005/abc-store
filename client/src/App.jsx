@@ -18,12 +18,14 @@ import Order from "./pages/Order";
 import Verify from "./pages/Verify";
 import SuccessPayment from "./pages/SuccessPayment";
 import UserOrders from "./pages/UserOrders";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 const App = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800 container mx-auto px-4 py-6 max-w-7xl">
       <ToastContainer position="top-right" autoClose={2000} />
       <Header />
+      <ScrollToTop />
       <div className="mt-30">
         <Routes>
           <Route path="/" element={<Home />} />

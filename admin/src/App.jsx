@@ -9,6 +9,9 @@ import MainLayout from "./MainLayout";
 import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProductsChart from "./pages/ProductsChart";
+import AccountsChart from "./pages/AccountsChart";
+import OrdersChart from "./pages/OrdersChart";
 
 const App = () => {
   return (
@@ -25,6 +28,9 @@ const App = () => {
           <Route path="/allAuth" element={<AllAuth />} />
           <Route path="/allOrders" element={<AllOrders />} />
           <Route path="/allProducts" element={<AllProducts />} />
+          <Route path="/productsChart" element={<ProductsChart />} />
+          <Route path="/accountsChart" element={<AccountsChart />} />
+          <Route path="/ordersChart" element={<OrdersChart />} />
         </Route>
       </Routes>
     </>

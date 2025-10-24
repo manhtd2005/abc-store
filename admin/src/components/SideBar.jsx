@@ -16,6 +16,11 @@ const SideBar = () => {
       { label: "List ", path: "/allAuth" },
       { label: "Add ", path: "/addAuth" },
     ],
+    chart: [
+      { label: "Product", path: "/productsChart" },
+      { label: "Account", path: "/accountsChart" },
+      { label: "Order", path: "/ordersChart" },
+    ],
   };
 
   // Xác định menu nào active dựa vào currentPath
@@ -23,6 +28,7 @@ const SideBar = () => {
   if (currentPath.includes("Products")) activeKey = "products";
   else if (currentPath.includes("Orders")) activeKey = "orders";
   else if (currentPath.includes("Auth")) activeKey = "auth";
+  else if (currentPath.includes("Chart")) activeKey = "chart";
 
   const activeMenu = activeKey ? menus[activeKey] : null;
 

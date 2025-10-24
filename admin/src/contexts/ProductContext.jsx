@@ -74,6 +74,49 @@ const ProductProvider = ({ children }) => {
     }
   }, []);
 
+  // Tổng số lượng product
+  const getTotalProducts = useCallback(() => {
+    return products.length;
+  }, [products]);
+
+  // Sản phẩm có giá cao nhất
+  const getHighestPriceProduct = useCallback(() => {
+    if (!products.length) return null;
+    return products.reduce(
+      (max, product) => (product.price > max.price ? product : max),
+      products[0]
+    );
+  }, [products]);
+
+  // Sản phẩm có giá thấp nhất
+  const getLowestPriceProduct = useCallback(() => {
+    if (!products.length) return null;
+    return products.reduce(
+      (min, product) => (product.price < min.price ? product : min),
+      products[0]
+    );
+  }, [products]);
+
+  // Sản phẩm có xếp hạng cao nhất
+  const getHighestRatedProduct = useCallback(() => {
+    if (!products.length) return null;
+    return products.reduce(
+      (max, product) =>
+        (product.rating?.rate || 0) > (max.rating?.rate || 0) ? product : max,
+      products[0]
+    );
+  }, [products]);
+
+  // Sản phẩm có xếp hạng thấp nhất
+  const getLowestRatedProduct = useCallback(() => {
+    if (!products.length) return null;
+    return products.reduce(
+      (min, product) =>
+        (product.rating?.rate || 0) < (min.rating?.rate || 0) ? product : min,
+      products[0]
+    );
+  }, [products]);
+
   // Fetch sản phẩm lần đầu khi component mount
   useEffect(() => {
     fetchProducts();
@@ -87,6 +130,11 @@ const ProductProvider = ({ children }) => {
     addProduct,
     updateProduct,
     removeProduct,
+    getTotalProducts,
+    getHighestPriceProduct,
+    getLowestPriceProduct,
+    getHighestRatedProduct,
+    getLowestRatedProduct,
   };
 
   return (
